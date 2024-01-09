@@ -1,4 +1,4 @@
-```git remote set-url upstream https://github.com/zarzob/Simply-Love-SM5```
+```git remote add upstream https://github.com/zarzob/Simply-Love-SM5```
 
 
 # Zmod fork of Simply Love
