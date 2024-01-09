@@ -1,6 +1,6 @@
 local songs = {
-	Hearts = "feel",
-	Arrows = "cloud break",
+	Hearts = "intro",
+	Arrows = "intro",
 	Bears  = "crystalis",
 	Ducks  = "Xuxa fami VRC6",
 	Cats   = "Beanmania IIDX",

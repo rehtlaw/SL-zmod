@@ -1,4 +1,4 @@
-local audio_file = "serenity in ruin.ogg"
+local audio_file = "outro.ogg"
 
 local style = ThemePrefs.Get("VisualStyle")
 if style == "SRPG7" then

@@ -1,3 +1,6 @@
+```git remote set-url upstream https://github.com/zarzob/Simply-Love-SM5```
+
+
 # Zmod fork of Simply Love
 
 A fork of Simply Love with some extra features that (attempt to) enhance quality of life while playing.
