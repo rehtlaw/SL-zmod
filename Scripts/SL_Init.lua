@@ -194,12 +194,12 @@ SL = {
 	},
 	-- Colors used by ITG for difficulties
 	ITGDiffColors = {
-		"#a355b8", --beginner
-		"#1ec51d", --easy
-		"#d6db41", --medium
-		"#ba3049",
-		"#2691c5",
-		"#F7F7F7", --edit
+		"#80FFFF", --beginner
+		"#80FF80", --easy
+		"#FFFF80", --medium
+		"#FF8080",
+		"#FF80FF",
+		"#B4B7BA", --edit
 	},
 	-- These are the original SL colors. They're used for decorative (non-text) elements, like the background hearts:
 	DecorativeColors = {
