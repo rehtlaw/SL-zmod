@@ -154,6 +154,11 @@ local LeaderboardRequestProcessor = function(res, master)
 		-- These will get overwritten if we have any entries in the leaderboard below.
 		SetScoreData(1, 1, "", "No Scores", "", false, false, false, false)
 		SetScoreData(2, 1, "", "No Scores", "", false, false, false, false)
+		
+		-- Don't display the second leaderboard on BoogieStats responses
+		if boogie or boogie_ex then
+			all_data[2].has_data = false
+		end
 
 		local numEntries = 0
 		if SL["P"..n].ActiveModifiers.ShowEXScore then
@@ -185,7 +190,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									entry["isSelf"],
 									entry["isRival"],
 									entry["isFail"],
-									false
+									boogie_ex
 								)
 				end
 			end
@@ -202,7 +207,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									entry["isSelf"],
 									entry["isRival"],
 									entry["isFail"],
-									false
+									boogie_ex
 								)
 				end
 			end
@@ -225,13 +230,13 @@ local LeaderboardRequestProcessor = function(res, master)
 		end
 
 		if data[playerStr]["rpg"] then
-			local entryCount = 0
+			local numEntries = 0
 			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
-					entryCount = entryCount + 1
-					SetScoreData(3, entryCount,
+					numEntries = numEntries + 1
+					SetScoreData(3, numEntries,
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
@@ -241,9 +246,9 @@ local LeaderboardRequestProcessor = function(res, master)
 									false
 								)
 				end
-				entryCount = entryCount + 1
-				for i=entryCount,5,1 do
-					SetScoreData(2, i,
+				numEntries = numEntries + 1
+				for i=numEntries,5,1 do
+					SetScoreData(3, i,
 									"",
 									"",
 									"",
@@ -273,7 +278,7 @@ local LeaderboardRequestProcessor = function(res, master)
 				end
 				numEntries = numEntries + 1
 				for i=numEntries,5,1 do
-					SetScoreData(3, i,
+					SetScoreData(4, i,
 									"",
 									"",
 									"",
