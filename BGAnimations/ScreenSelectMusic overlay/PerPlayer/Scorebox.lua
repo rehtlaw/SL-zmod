@@ -182,12 +182,12 @@ local LeaderboardRequestProcessor = function(res, master)
 
 		local numEntries = 0
 		if SL["P"..n].ActiveModifiers.ShowEXScore then
-			-- If the player is using EX scoring, then we want to display the EX leaderboard first.
+			-- If the player is using EX scoring, then we want to display the EX leaderboard first.			
 			if data[playerStr]["exLeaderboard"] then
 				numEntries = 0
 				for entry in ivalues(data[playerStr]["exLeaderboard"]) do
 					numEntries = numEntries + 1
-					SetScoreData(2, numEntries,
+					SetScoreData(1, numEntries,
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
@@ -199,7 +199,7 @@ local LeaderboardRequestProcessor = function(res, master)
 				end
 				numEntries = numEntries + 1
 				for i=numEntries,5,1 do
-					SetScoreData(2, i, "", "", "", "", "", "", true)
+					SetScoreData(1, i, "", "", "", "", "", "", true)
 				end
 			end
 
@@ -207,7 +207,7 @@ local LeaderboardRequestProcessor = function(res, master)
 				numEntries = 0
 				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
 					numEntries = numEntries + 1
-					SetScoreData(1, numEntries,
+					SetScoreData(2, numEntries,
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
@@ -219,11 +219,13 @@ local LeaderboardRequestProcessor = function(res, master)
 				end
 				numEntries = numEntries + 1
 				for i=numEntries,5,1 do
-					SetScoreData(1, i, "", "", "", "", "", "", boogie_ex)
+					SetScoreData(2, i, "", "", "", "", "", "", boogie_ex)
 				end
 			end
 		else
 			-- Display the main GrooveStats leaderboard first if player is not using EX scoring.
+			cur_style = 0
+			
 			if data[playerStr]["gsLeaderboard"] then
 				numEntries = 0
 				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
@@ -265,7 +267,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			end
 		end
 
+		-- Display event boxes first if they are applicable
 		if data[playerStr]["rpg"] then
+			cur_style = 3
 			local numEntries = 0
 			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
 
@@ -296,6 +300,7 @@ local LeaderboardRequestProcessor = function(res, master)
 		end
 
 		if data[playerStr]["itl"] then
+			cur_style = 4
 			local numEntries = 0
 			SetScoreData(4, 1, "", "No Scores", "", false, false, false)
 
@@ -648,7 +653,7 @@ local af = Def.ActorFrame{
 			self:diffusealpha(0):x(2):y(-5)
 		end,
 		LoopScoreboxCommand=function(self)
-			if cur_style == 1 then
+			if (cur_style == 1 and not SL["P"..n].ActiveModifiers.ShowEXScore) or (cur_style == 0 and SL["P"..n].ActiveModifiers.ShowEXScore) then
 				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.3)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
