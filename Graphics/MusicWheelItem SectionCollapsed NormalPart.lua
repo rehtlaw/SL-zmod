@@ -19,11 +19,12 @@ local af = Def.ActorFrame{
 	},
 	Def.Quad{
 		InitCommand=function(self)
-		self:horizalign(left):diffuse(color("#4c565d")):zoomto(item_width, _screen.h/num_visible_items - 1)
-		if ThemePrefs.Get("VisualStyle") == "Technique" or ThemePrefs.Get("RainbowMode") then
-			self:diffusealpha(0.5)
+			self:horizalign(left):diffuse(color("#4c565d")):zoomto(item_width, _screen.h/num_visible_items - 1)
+			if ThemePrefs.Get("VisualStyle") == "Technique" or ThemePrefs.Get("RainbowMode") then
+				self:diffusealpha(0.5)
+			end
 		end
-	}
+	},
 }
 
 if ThemePrefs.Get("SongSelectBG") ~= "Off" then
