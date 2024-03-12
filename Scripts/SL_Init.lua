@@ -4,15 +4,15 @@ local PlayerDefaults = {
 	__index = {
 		initialize = function(self)
 			self.ActiveModifiers = {
-				SpeedModType = "X",
-				SpeedMod = 1.00,
+				SpeedModType = "M",
+				SpeedMod = 350,
 				JudgmentGraphic = "Love 2x6 (doubleres).png",
-				HeldGraphic = "None",
+				HeldGraphic = "",
 				ComboFont = "Wendy",
 				HoldJudgment = "Love 1x2 (doubleres).png",
 				NoteSkin = nil,
 				Mini = "0%",
-				BackgroundFilter = 0,
+				BackgroundFilter = 50,
 				VisualDelay = "0ms",
 
 				HideTargets = false,
@@ -23,7 +23,7 @@ local PlayerDefaults = {
 				HideDanger = false,
 				HideComboExplosions = false,
 
-				ColumnFlashOnMiss = false,
+				ColumnFlashOnMiss = true,
 				SubtractiveScoring = false,
 				MeasureCounter = "None",
 				MeasureCounterLeft = true,
@@ -38,8 +38,8 @@ local PlayerDefaults = {
 				LifeMeterType = "Standard",
 				NPSGraphAtTop = false,
 				JudgmentTilt = false,
-				ColumnCues = false,
-				ColumnCountdown = false,
+				ColumnCues = true,
+				ColumnCountdown = true,
 				ShowHeldMiss = false,
 				DisplayScorebox = true,
 
@@ -48,12 +48,12 @@ local PlayerDefaults = {
 				ErrorBarMultiTick = false,
 				ErrorBarCap = 5,
 
-				HideEarlyDecentWayOffJudgments = false,
+				HideEarlyDecentWayOffJudgments = true,
 				HideEarlyDecentWayOffFlash = false,
 
 				TimingWindows = {true, true, true, true, true},
 				ShowFaPlusWindow = false,
-				ShowEXScore = false,
+				ShowEXScore = true,
 				ShowFaPlusPane = true,
 				
 				FlashMiss = true,
