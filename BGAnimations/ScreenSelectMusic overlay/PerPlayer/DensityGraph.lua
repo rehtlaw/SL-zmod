@@ -28,7 +28,7 @@ end
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:x(_screen.cx-182)
+		self:x(_screen.cx-158)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
 			self:y(_screen.cy+62)
 		else
