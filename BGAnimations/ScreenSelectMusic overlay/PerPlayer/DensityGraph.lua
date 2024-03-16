@@ -16,12 +16,21 @@ local text_table = {}
 local leaving_screen = false
 local breakdown_table = {}
 
-local af = Def.ActorFrame({
-	InitCommand = function(self)
-		self:visible(GAMESTATE:IsHumanPlayer(player))
-		self:x(_screen.cx - 158)
-		if #GAMESTATE:GetHumanPlayers() == 1 then
-			self:y(_screen.cy + 62)
+local function CloseFolder()
+	local wheel = SCREENMAN:GetTopScreen():GetMusicWheel()
+	local section = wheel:GetSelectedSection()
+	wheel:SetOpenSection(""):SetOpenSection(section):SetOpenSection("")
+	wheel:Move(1)
+	wheel:Move(-1)
+	wheel:Move(0)
+end
+
+local af = Def.ActorFrame{
+	InitCommand=function(self)
+		self:visible( GAMESTATE:IsHumanPlayer(player) )
+		self:x(_screen.cx-182)
+		if #GAMESTATE:GetHumanPlayers() == 1 then 
+			self:y(_screen.cy+62)
 		else
 			self:y(_screen.cy + 23)
 		end
@@ -78,13 +87,8 @@ local af = Def.ActorFrame({
 			if GAMESTATE:GetNumSidesJoined() == 2 then
 				self:queuecommand("TogglePatternInfo")
 			end
-		elseif params.Name == "CloseFolder1" or params.Name == "CloseFolder2" or params.Name == "CloseFolder3" then
-			local wheel = SCREENMAN:GetTopScreen():GetMusicWheel()
-			local section = wheel:GetSelectedSection()
-			wheel:SetOpenSection(""):SetOpenSection(section):SetOpenSection("")
-			wheel:Move(1)
-			wheel:Move(-1)
-			wheel:Move(0)
+		elseif (params.Name == "CloseFolder1" or params.Name == "CloseFolder2" or params.Name == "CloseFolder3") and params.Name == ThemePrefs.Get("CloseFolderCodes") then
+			CloseFolder()
 		end
 	end,
 })
