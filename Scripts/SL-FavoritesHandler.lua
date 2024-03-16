@@ -118,23 +118,23 @@ generateFavoritesForMusicWheel = function()
                     end
 
                     -- sort alphabetically
-                    table.sort(listofavorites, function(a, b)
-                        return a.Name:lower() < b.Name:lower()
-                    end)
-                    for i = 1, #listofavorites do
-                        table.sort(listofavorites[i].Songs, function(a, b)
-                            return split("/", a)[2]:lower() <
-                                       split("/", b)[2]:lower()
-                        end)
-                    end
+--                     table.sort(listofavorites, function(a, b)
+--                         return a.Name:lower() < b.Name:lower()
+--                     end)
+--                     for i = 1, #listofavorites do
+--                         table.sort(listofavorites[i].Songs, function(a, b)
+--                             return split("/", a)[2]:lower() <
+--                                        split("/", b)[2]:lower()
+--                         end)
+--                     end
 
                     -- append each group/song string to the overall strToWrite
-                    for fav, _ in ivalues(listofavorites) do
-                        strToWrite = strToWrite .. ("---%s\n"):format(fav.Name)
-                        for song, i in ivalues(fav.Songs) do
-                            strToWrite = strToWrite .. ("%s\n"):format(song)
-                        end
-                    end
+--                     for fav, _ in ivalues(listofavorites) do
+--                         strToWrite = strToWrite .. ("---%s\n"):format(fav.Name)
+--                         for song, i in ivalues(fav.Songs) do
+--                             strToWrite = strToWrite .. ("%s\n"):format(song)
+--                         end
+--                     end
                 end
             else
                 -- SM("No favorites found at "..path)
