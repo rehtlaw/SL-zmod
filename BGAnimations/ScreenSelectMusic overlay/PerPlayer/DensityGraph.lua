@@ -91,7 +91,7 @@ local af = Def.ActorFrame{
 			CloseFolder()
 		end
 	end,
-})
+}
 
 -- Background quad for the density graph
 af[#af + 1] = Def.Quad({
