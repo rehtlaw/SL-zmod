@@ -52,7 +52,7 @@ local function CreditsText( player )
 
 					-- dark text for RainbowMode
 					if ThemePrefs.Get("RainbowMode") then
-						textColor = Color.Black
+						textColor = Color.White
 					end
 				end
 			end
