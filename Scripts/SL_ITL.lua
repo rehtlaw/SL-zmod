@@ -227,9 +227,18 @@ ReadItlFile = function(player)
 				end
 			end
 		end
-
-		itlData["fixedEx2024"] = true
+		itlData["fixedEx2024"] = true	
 	end
+	
+	if itlData["fixedLamps"] == nil then
+		local hashMap = itlData["hashMap"]
+		for hash, data in pairs(hashMap) do
+			if data["ex"] == 10000 then
+				data["clearType"] = 5
+			end
+		end
+	end
+	itlData["fixedLamps"] = true
 	
 	-- Fix points that got default-stored as empty strings in an earlier
 	-- version of my remote ITL score pull code to 0. If the data is already
