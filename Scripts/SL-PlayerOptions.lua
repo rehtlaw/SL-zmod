@@ -591,7 +591,7 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	TargetScore = {
-		Values = { "SpecifiedValue", "Machine best", "Personal best" }
+		Values = { "SpecifiedValue", "Machine best", "Personal best", "Ghost Data" }
 	},
 	-------------------------------------------------------------------------
 	TargetScoreNumber = {
@@ -963,6 +963,10 @@ local Overrides = {
 	-------------------------------------------------------------------------
 	TimerMode = {
 		Values = { "Time", "Measures" }
+	},
+	-------------------------------------------------------------------------
+	RailBalance = {
+		Values = { "No", "What" }
 	},
 	-------------------------------------------------------------------------
 	ExtraAesthetics = {
