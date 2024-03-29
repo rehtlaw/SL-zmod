@@ -42,9 +42,10 @@ local t = Def.ActorFrame({
 						-- and BlockRow coloring appropriately
 						local meter = StepsToDisplay[i]:GetMeter()
 						local difficulty = StepsToDisplay[i]:GetDifficulty()
+						self:GetChild("Grid"):GetChild("Meter_" .. i):playcommand("Set", { Meter = meter })
 						self:GetChild("Grid")
-							:GetChild("Meter_" .. i)
-							:playcommand("Set", { Meter = meter, Difficulty = difficulty })
+							:GetChild("MeterBackground_" .. i)
+							:playcommand("Set", { Difficulty = difficulty })
 					else
 						-- otherwise, set the meter to an empty string and hide this particular colored BlockRow
 						self:GetChild("Grid"):GetChild("Meter_" .. i):playcommand("Unset")
@@ -86,6 +87,11 @@ for RowNumber = -2, 2 do
 				self:diffusealpha(1)
 			end
 		end,
+		SetCommand = function(self, params)
+			local height = 39
+			local spacing = 2
+			self:diffuse(DifficultyColor(params.Difficulty)):zoomto(height, height):y((height + spacing) * RowNumber)
+		end,
 	})
 
 	Grid[#Grid + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")
@@ -99,7 +105,7 @@ for RowNumber = -2, 2 do
 			end,
 			SetCommand = function(self, params)
 				-- diffuse and set each chart's difficulty meter
-				self:diffuse(DifficultyColor(params.Difficulty))
+				self:diffuse(color("#0f0f0f"))
 				self:settext(params.Meter)
 			end,
 			UnsetCommand = function(self)
