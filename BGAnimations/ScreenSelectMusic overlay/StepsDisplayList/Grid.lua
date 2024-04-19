@@ -49,6 +49,7 @@ local t = Def.ActorFrame({
 					else
 						-- otherwise, set the meter to an empty string and hide this particular colored BlockRow
 						self:GetChild("Grid"):GetChild("Meter_" .. i):playcommand("Unset")
+						self:GetChild("Grid"):GetChild("MeterBackground_" .. i):playcommand("Unset")
 					end
 				end
 			end
@@ -91,6 +92,9 @@ for RowNumber = -2, 2 do
 			local height = 39
 			local spacing = 2
 			self:diffuse(DifficultyColor(params.Difficulty)):zoomto(height, height):y((height + spacing) * RowNumber)
+		end,
+		UnsetCommand = function(self)
+			self:diffuse(color("#0f0f0f"))
 		end,
 	})
 
