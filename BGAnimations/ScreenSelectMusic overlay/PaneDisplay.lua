@@ -631,92 +631,31 @@ for player in ivalues(PlayerNumber) do
 		}
 
 	-- Player Profile/GrooveStats HighScore
-	af2[#af2 + 1] = LoadFont("Common Normal")
-		.. {
-			Name = "PlayerHighScore",
-			InitCommand = function(self)
-				self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-				self:x(pos.col[3] + 25 * text_zoom)
-				self:y(pos.row[2])
-			end,
-			SetCommand = function(self)
-				-- We overload this actor to work both for GrooveStats and also offline.
-				-- If we're connected, we let the ResponseProcessor set the text
-				if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
-					self:settext("??.??%")
-				else
-					self:queuecommand("SetDefault")
-				end
-			end,
-			SetDefaultCommand = function(self)
-				local playerScore = GetScoreForPlayer(player)
-				if playerScore ~= nil then
-					self:settext(FormatPercentScore(playerScore:GetPercentDP())):diffuse(Color.Black)
-				else
-					self:settext("??.??%"):diffuse(Color.Black)
-				end
-			end,
-		}
-
-	-- Player Profile Combo Check
-	af2[#af2 + 1] = LoadFont("Common Normal")
-		.. {
-			Name = "PlayerCombo",
-			InitCommand = function(self)
-				self:zoom(text_zoom + 0.2):horizalign(right):rotationz(-30)
-				self:x(pos.col[3] + 30 * text_zoom)
-				self:y(pos.row[2] - 3)
-			end,
-			SetCommand = function(self)
+	af2[#af2+1] = LoadFont("Common Normal")..{
+		Name="PlayerHighScore",
+		InitCommand=function(self)
+			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+			self:x(pos.col[3]+25*text_zoom)
+			self:y(pos.row[2])
+		end,
+		SetCommand=function(self)
+			-- We overload this actor to work both for GrooveStats and also offline.
+			-- If we're connected, we let the ResponseProcessor set the text
+			if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
+				self:settext("??.??%")
+			else
 				self:queuecommand("SetDefault")
-			end,
-			SetDefaultCommand = function(self)
-				local playerScore = GetScoreForPlayer(player)
-
-				local playerNum = ToEnumShortString(player)
-				SL[playerNum].comboBonus = 0
-
-				if playerScore ~= nil then
-					if
-						playerScore:GetTapNoteScore("TapNoteScore_W4")
-							+ playerScore:GetTapNoteScore("TapNoteScore_W5")
-							+ playerScore:GetTapNoteScore("TapNoteScore_Miss")
-						== 0
-					then
-						if
-							playerScore:GetTapNoteScore("TapNoteScore_W3")
-								+ playerScore:GetTapNoteScore("TapNoteScore_W2")
-							== 0
-						then
-							self:settext("****"):diffuse(color("#21CCE8")):visible(true)
-							SL[playerNum].comboBonus = 400
-						elseif playerScore:GetTapNoteScore("TapNoteScore_W3") == 0 then
-							self:settext("FEC"):diffuse(Color.Yellow):visible(true)
-							if playerScore:GetTapNoteScore("TapNoteScore_W2") <= 10 then
-								self:settext(playerScore:GetTapNoteScore("TapNoteScore_W2") .. "E")
-							end
-							SL[playerNum].comboBonus = 200
-						else
-							self:settext("FC"):diffuse(color("#00FF00")):visible(true)
-							if playerScore:GetTapNoteScore("TapNoteScore_W3") <= 10 then
-								self:settext(playerScore:GetTapNoteScore("TapNoteScore_W3") .. "G")
-							end
-							SL[playerNum].comboBonus = 100
-						end
-					else
-						SL[playerNum].comboBonus = 0
-						if playerScore:GetTapNoteScore("TapNoteScore_Miss") == 1 then
-							self:settext("1M"):diffuse(color("#FF0000")):visible(true)
-						else
-							self:visible(false)
-						end
-					end
-				else
-					self:visible(false)
-					SL[playerNum].comboBonus = 0
-				end
-			end,
-		}
+			end
+		end,
+		SetDefaultCommand=function(self)
+			local playerScore = GetScoreForPlayer(player)
+			if playerScore ~= nil then
+				self:settext(FormatPercentScore(playerScore:GetPercentDP())):diffuse(Color.Black)
+			else
+				self:settext("??.??%"):diffuse(Color.Black)
+			end
+		end
+	}
 
 	af2[#af2 + 1] = LoadFont("Common Normal")
 		.. {

@@ -4,6 +4,8 @@
 local player, layout = ...
 local mods = SL[ToEnumShortString(player)].ActiveModifiers
 
+local hideEarlyJudgment = mods.HideEarlyDecentWayOffJudgments and true or false
+
 local threshold = nil
 for i = 1, NumJudgmentsAvailable() do
     if mods.TimingWindows[i] then
@@ -24,7 +26,7 @@ local function DisplayText(self, params)
 
             self:diffusealpha(1)
                 :settext(params.Early and "EARLY" or "LATE")
-                :diffuse(params.Early and color("#ff5a4e") or color("#066af4"))
+                :diffuse(params.Early and color("#066af4") or color("#ff5a4e"))
                 :x((params.Early and -1 or 1) * 40)
                 :sleep(0.5)
                 :diffusealpha(0)
@@ -46,7 +48,7 @@ local af = Def.ActorFrame{
             self:zoom(0.25):shadowlength(1)
         end,
         EarlyHitMessageCommand=function(self, params)
-            if params.Player ~= player then return end
+            if params.Player ~= player or hideEarlyJudgment then return end
     
             DisplayText(self, params)
         end,
