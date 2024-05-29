@@ -51,7 +51,7 @@ local af = Def.ActorFrame{
 		InitCommand=function(self)
 			self:zoomto(GraphWidth, GraphHeight):diffuse(color("#101519")):vertalign(top)
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
-				self:diffusealpha(0.75)
+				self:diffusealpha(0.95)
 			end
 		end
 	},
@@ -135,7 +135,7 @@ af[#af+1] = Def.Quad{
 	Name="ZeroLine",
 	InitCommand=function(self)
 		self:zoomto(GraphWidth,1)
-		self:y(GraphHeight/2)
+		self:y(GraphHeight/2+0.75)
 		self:diffusealpha(0.1)
 	end
 }
