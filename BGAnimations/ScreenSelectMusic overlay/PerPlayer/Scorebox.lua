@@ -21,8 +21,8 @@ local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local NumEntries = 5
 
 local border = 5
-local width = 162
-local height = 80
+local width = 171
+local height = 84
 
 local cur_style = 0
 local num_styles = 4
@@ -387,12 +387,12 @@ local af = Def.ActorFrame({
 		-- 	end
 		-- else
 		if pn == "P1" then
-			self:zoom(0.65):x(_screen.cx - 370):y(_screen.cy + 115)
+			self:zoom(0.65):x(_screen.cx - 366):y(_screen.cy + 115)
 			if IsNotWide then
 				self:x(_screen.cx - 48)
 			end
 		elseif pn == "P2" then
-			self:zoom(0.65):x(_screen.cx + 371):y(_screen.cy + 115)
+			self:zoom(0.65):x(_screen.cx + 367):y(_screen.cy + 115)
 			if IsNotWide then
 				self:x(_screen.cx + 279)
 			end
@@ -408,18 +408,18 @@ local af = Def.ActorFrame({
 	end,
 	PlayerJoinedMessageCommand = function(self, params)
 		if pn == "P1" then
-			self:zoom(0.65):x(_screen.cx - 370):y(_screen.cy + 115)
+			self:zoom(0.65):x(_screen.cx - 366):y(_screen.cy + 115)
 		elseif pn == "P2" then
-			self:zoom(0.65):x(_screen.cx + 371):y(_screen.cy + 115)
+			self:zoom(0.65):x(_screen.cx + 367):y(_screen.cy + 115)
 		end
 	end,
 	PlayerUnjoinedMessageCommand = function(self, params)
 		if params.Player == player then
 			self:visible(false)
 		end
-		self:zoom(0.65):x(_screen.cx - 370):y(_screen.cy + 115)
+		self:zoom(0.65):x(_screen.cx - 366):y(_screen.cy + 115)
 		if pn == "P2" then
-			self:zoom(0.65):x(_screen.cx + 371):y(_screen.cy + 115)
+			self:zoom(0.65):x(_screen.cx + 367):y(_screen.cy + 115)
 		end
 	end,
 	CurrentSongChangedMessageCommand = function(self)
@@ -633,16 +633,9 @@ local af = Def.ActorFrame({
 		Name = "Background",
 		InitCommand = function(self)
 			self:diffuse(color("#000000")):setsize(width, height)
-			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-				self:setsize(width - 40, height)
-			end
 		end,
 		PlayerJoinedMessageCommand = function(self, params)
-			if IsNotWide then
-				self:setsize(width - 40, height)
-			else
-				self:setsize(width, height)
-			end
+			self:setsize(width, height)
 		end,
 		PlayerUnjoinedMessageCommand = function(self, params)
 			self:setsize(width, height)
@@ -911,20 +904,16 @@ for i = 1, NumEntries do
 			Name = "Score" .. i,
 			Text = "",
 			InitCommand = function(self)
-				self:diffuse(Color.White):xy(-width / 2 + 160, y):horizalign(right):zoom(zoom)
+				self:diffuse(Color.White):xy(-width / 2 + 169, y):horizalign(right):zoom(zoom)
 				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
 					self:x(-width / 2 + 140)
 				end
 			end,
 			PlayerJoinedMessageCommand = function(self, params)
-				if IsNotWide then
-					self:x(-width / 2 + 140)
-				else
-					self:x(-width / 2 + 160)
-				end
+				self:x(-width / 2 + 169)
 			end,
 			PlayerUnjoinedMessageCommand = function(self, params)
-				self:x(-width / 2 + 160)
+				self:x(-width / 2 + 169)
 			end,
 			LoopScoreboxCommand = function(self)
 				self:linear(transition_seconds / 2):diffusealpha(0):queuecommand("SetScorebox")
@@ -983,52 +972,6 @@ for i = 1, NumEntries do
 					clr = rival_color
 				end
 				self:settext(score.name)
-				self:linear(transition_seconds / 2):diffusealpha(1):diffuse(clr)
-			end,
-			ResetCommand = function(self)
-				self:stoptweening()
-			end,
-			OffCommand = function(self)
-				self:stoptweening()
-			end,
-		}
-
-	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
-		.. {
-			Name = "Score" .. i,
-			Text = "",
-			InitCommand = function(self)
-				self:diffuse(Color.White):xy(-width / 2 + 160, y):horizalign(right):zoom(zoom)
-				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-					self:x(-width / 2 + 140)
-				end
-			end,
-			PlayerJoinedMessageCommand = function(self, params)
-				if IsNotWide then
-					self:x(-width / 2 + 140)
-				else
-					self:x(-width / 2 + 160)
-				end
-			end,
-			PlayerUnjoinedMessageCommand = function(self, params)
-				self:x(-width / 2 + 160)
-			end,
-			LoopScoreboxCommand = function(self)
-				self:linear(transition_seconds / 2):diffusealpha(0):queuecommand("SetScorebox")
-			end,
-			SetScoreboxCommand = function(self)
-				local score = all_data[cur_style + 1]["scores"][i]
-				local clr = Color.White
-				if score.isFail then
-					clr = Color.Red
-				elseif score.isEx then
-					clr = SL.JudgmentColors["FA+"][1]
-				elseif score.isSelf then
-					clr = self_color
-				elseif score.isRival then
-					clr = rival_color
-				end
-				self:settext(score.score)
 				self:linear(transition_seconds / 2):diffusealpha(1):diffuse(clr)
 			end,
 			ResetCommand = function(self)

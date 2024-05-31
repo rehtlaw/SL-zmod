@@ -85,10 +85,10 @@ return Def.ActorFrame({
 			end
 		elseif player == PLAYER_2 then
 			if GAMESTATE:IsCourseMode() then
-				self:x(_screen.cx - 220)
+				self:x(_screen.cx - 332)
 				self:y(_screen.cy + 85)
 			else
-				self:x(_screen.cx - 220)
+				self:x(_screen.cx - 332)
 				self:y(_screen.cy + 40)
 			end
 		end
@@ -104,18 +104,18 @@ return Def.ActorFrame({
 		InitCommand = function(self)
 			self:diffuse(color("#000000"))
 			if #GAMESTATE:GetHumanPlayers() == 1 then
-				self:zoomto(190, _screen.h / 8):x(190):y(18)
+				self:zoomto(285, _screen.h / 8):x(168.5):y(18)
 			else
-				self:zoomto(175, _screen.h / 28):x(113):y(0)
+				self:zoomto(285, _screen.h / 28):x(168.5):y(0)
 			end
 		end,
 		ResetCommand = function(self)
 			local StepsOrTrail = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)
 				or GAMESTATE:GetCurrentSteps(player)
 			if #GAMESTATE:GetHumanPlayers() == 1 then
-				self:zoomto(190, _screen.h / 8):x(120):y(18)
+				self:zoomto(285, _screen.h / 8):x(168.5):y(18)
 			else
-				self:zoomto(175, _screen.h / 28):x(113):y(0)
+				self:zoomto(285, _screen.h / 28):x(168.5):y(0)
 			end
 			if StepsOrTrail then
 				local difficulty = StepsOrTrail:GetDifficulty()
@@ -139,26 +139,24 @@ return Def.ActorFrame({
 	}),
 
 	--STEPS label
-	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
-		InitCommand=function(self)
-			self:diffuse(0,0,0,1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
-		end,
-		UpdateTrailTextMessageCommand=function(self, params)
-			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
-		end
-	},
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Text = GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
+			InitCommand = function(self)
+				self:diffuse(0, 0, 0, 1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
+			end,
+			UpdateTrailTextMessageCommand = function(self, params)
+				self:settext(THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index))
+			end,
+		},
 
 	--stepartist text
-	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
-			if GAMESTATE:IsCourseMode() then
-				self:x(60):maxwidth(138)
-			else
-				self:x(70):diffuse(color("#000000"))
-				if #GAMESTATE:GetHumanPlayers() == 1 then 
-					self:maxwidth(175)
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			InitCommand = function(self)
+				self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
+				if GAMESTATE:IsCourseMode() then
+					self:x(60):maxwidth(138)
 				else
 					self:x(70):diffuse(color("#000000"))
 					if #GAMESTATE:GetHumanPlayers() == 1 then

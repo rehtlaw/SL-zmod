@@ -510,12 +510,13 @@ for player in ivalues(PlayerNumber) do
 			Name = item.name,
 
 			-- numerical value
-			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				InitCommand=function(self)
-					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-					self:x(pos.col[col])
-					self:y(pos.row[row])
-				end,
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+				.. {
+					InitCommand = function(self)
+						self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+						self:x(pos.col[col])
+						self:y(pos.row[row])
+					end,
 
 					SetCommand = function(self)
 						local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
@@ -537,135 +538,141 @@ for player in ivalues(PlayerNumber) do
 				},
 
 			-- label
-			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				Text=item.name,
-				InitCommand=function(self)
-					self:zoom(text_zoom):diffuse(Color.Black):horizalign(left)
-					self:x(pos.col[col]+3)
-					self:y(pos.row[row])
-				end
-			},
-		}
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+				.. {
+					Text = item.name,
+					InitCommand = function(self)
+						self:zoom(text_zoom):diffuse(Color.Black):horizalign(left)
+						self:x(pos.col[col] + 3)
+						self:y(pos.row[row])
+					end,
+				},
+		})
 	end
 
 	-- Machine/World Record Machine Tag
-	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Name="MachineHighScoreName",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
-			self:y(pos.row[1])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
-				self:settext("----"):diffuse(Color.Black)
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
-			self:settext(machineScore and machineScore:GetName() or "----"):diffuse(Color.Black)
-			DiffuseEmojis(self:ClearAttributes())
-		end
-	}
+	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "MachineHighScoreName",
+			InitCommand = function(self)
+				self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
+				self:x(pos.col[3] - 50 * text_zoom)
+				self:y(pos.row[1])
+			end,
+			SetCommand = function(self)
+				-- We overload this actor to work both for GrooveStats and also offline.
+				-- If we're connected, we let the ResponseProcessor set the text
+				if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
+					self:settext("----"):diffuse(Color.Black)
+				else
+					self:queuecommand("SetDefault")
+				end
+			end,
+			SetDefaultCommand = function(self)
+				local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
+				local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
+				self:settext(machineScore and machineScore:GetName() or "----"):diffuse(Color.Black)
+				DiffuseEmojis(self:ClearAttributes())
+			end,
+		}
 
 	-- Machine/World Record HighScore
-	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Name="MachineHighScore",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
-			self:y(pos.row[1])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
-				self:settext("??.??%"):diffuse(Color.Black)
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
-			if machineScore ~= nil then
-				self:settext(FormatPercentScore(machineScore:GetPercentDP())):diffuse(Color.Black)
-			else
-				self:settext("??.??%"):diffuse(Color.Black)
-			end
-		end
-	}
+	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "MachineHighScore",
+			InitCommand = function(self)
+				self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+				self:x(pos.col[3] + 25 * text_zoom)
+				self:y(pos.row[1])
+			end,
+			SetCommand = function(self)
+				-- We overload this actor to work both for GrooveStats and also offline.
+				-- If we're connected, we let the ResponseProcessor set the text
+				if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
+					self:settext("??.??%"):diffuse(Color.Black)
+				else
+					self:queuecommand("SetDefault")
+				end
+			end,
+			SetDefaultCommand = function(self)
+				local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
+				local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
+				if machineScore ~= nil then
+					self:settext(FormatPercentScore(machineScore:GetPercentDP())):diffuse(Color.Black)
+				else
+					self:settext("??.??%"):diffuse(Color.Black)
+				end
+			end,
+		}
 
 	-- Player Profile/GrooveStats Machine Tag
-	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Name="PlayerHighScoreName",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
-			self:y(pos.row[2])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
-				self:settext("----")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local playerScore = GetScoreForPlayer(player)
-			self:settext(playerScore and playerScore:GetName() or "----"):diffuse(Color.Black)
-			DiffuseEmojis(self:ClearAttributes())
-		end
-	}
+	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "PlayerHighScoreName",
+			InitCommand = function(self)
+				self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
+				self:x(pos.col[3] - 50 * text_zoom)
+				self:y(pos.row[2])
+			end,
+			SetCommand = function(self)
+				-- We overload this actor to work both for GrooveStats and also offline.
+				-- If we're connected, we let the ResponseProcessor set the text
+				if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
+					self:settext("----")
+				else
+					self:queuecommand("SetDefault")
+				end
+			end,
+			SetDefaultCommand = function(self)
+				local playerScore = GetScoreForPlayer(player)
+				self:settext(playerScore and playerScore:GetName() or "----"):diffuse(Color.Black)
+				DiffuseEmojis(self:ClearAttributes())
+			end,
+		}
 
 	-- Player Profile/GrooveStats HighScore
-	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Name="PlayerHighScore",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
-			self:y(pos.row[2])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
-				self:settext("??.??%")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local playerScore = GetScoreForPlayer(player)
-			if playerScore ~= nil then
-				self:settext(FormatPercentScore(playerScore:GetPercentDP())):diffuse(Color.Black)
-			else
-				self:settext("??.??%"):diffuse(Color.Black)
-			end
-		end
-	}
+	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "PlayerHighScore",
+			InitCommand = function(self)
+				self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+				self:x(pos.col[3] + 25 * text_zoom)
+				self:y(pos.row[2])
+			end,
+			SetCommand = function(self)
+				-- We overload this actor to work both for GrooveStats and also offline.
+				-- If we're connected, we let the ResponseProcessor set the text
+				if IsServiceAllowed(SL.GrooveStats.GetScores) and ThemePrefs.Get("MusicWheelGS") == "Pane" then
+					self:settext("??.??%")
+				else
+					self:queuecommand("SetDefault")
+				end
+			end,
+			SetDefaultCommand = function(self)
+				local playerScore = GetScoreForPlayer(player)
+				if playerScore ~= nil then
+					self:settext(FormatPercentScore(playerScore:GetPercentDP())):diffuse(Color.Black)
+				else
+					self:settext("??.??%"):diffuse(Color.Black)
+				end
+			end,
+		}
 
-	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-		Name="Loading",
-		Text="Loading ... ",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black)
-			self:x(pos.col[3]-15)
-			self:y(pos.row[3])
-			self:visible(false)
-		end,
-		SetCommand=function(self)
-			self:settext("Loading ...")
-			self:visible(false)
-		end
-	}
+	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "Loading",
+			Text = "Loading ... ",
+			InitCommand = function(self)
+				self:zoom(text_zoom):diffuse(Color.Black)
+				self:x(pos.col[3] - 15)
+				self:y(pos.row[3])
+				self:visible(false)
+			end,
+			SetCommand = function(self)
+				self:settext("Loading ...")
+				self:visible(false)
+			end,
+		}
 
 	-- Chart Difficulty Meter
 	af2[#af2 + 1] = LoadFont("Wendy/_wendy small")
@@ -701,36 +708,38 @@ for player in ivalues(PlayerNumber) do
 	if ThemePrefs.Get("MusicWheelGS") == "Pane" then
 		for i = 1, 3 do
 			-- Rival Machine Tag
-			af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				Name="Rival"..i.."Name",
-				InitCommand=function(self)
-					self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-					self:x(pos.col[3]+50*text_zoom)
-					self:y(pos.row[i])
-				end,
-				OnCommand=function(self)
-					self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
-				end,
-				SetCommand=function(self)
-					self:settext("----"):diffuse(Color.Black)
-				end
-			}
-	
+			af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+				.. {
+					Name = "Rival" .. i .. "Name",
+					InitCommand = function(self)
+						self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
+						self:x(pos.col[3] + 50 * text_zoom)
+						self:y(pos.row[i])
+					end,
+					OnCommand = function(self)
+						self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
+					end,
+					SetCommand = function(self)
+						self:settext("----"):diffuse(Color.Black)
+					end,
+				}
+
 			-- Rival HighScore
-			af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				Name="Rival"..i.."Score",
-				InitCommand=function(self)
-					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-					self:x(pos.col[3]+125*text_zoom)
-					self:y(pos.row[i])
-				end,
-				OnCommand=function(self)
-					self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
-				end,
-				SetCommand=function(self)
-					self:settext("??.??%"):diffuse(Color.Black)
-				end
-			}
+			af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+				.. {
+					Name = "Rival" .. i .. "Score",
+					InitCommand = function(self)
+						self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+						self:x(pos.col[3] + 125 * text_zoom)
+						self:y(pos.row[i])
+					end,
+					OnCommand = function(self)
+						self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
+					end,
+					SetCommand = function(self)
+						self:settext("??.??%"):diffuse(Color.Black)
+					end,
+				}
 		end
 	end
 end
