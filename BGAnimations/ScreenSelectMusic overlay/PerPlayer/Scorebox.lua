@@ -193,34 +193,38 @@ local LeaderboardRequestProcessor = function(res, master)
 		-- These will get overwritten if we have any entries in the leaderboard below.
 		SetScoreData(1, 1, "", "No Scores", "", false, false, false, false)
 		SetScoreData(2, 1, "", "No Scores", "", false, false, false, false)
-		
+
 		all_data[1].has_data = false
 		all_data[2].has_data = false
-		
-		local showITG = SL["P"..n].ActiveModifiers.SBITGScore
-		local showEX = SL["P"..n].ActiveModifiers.SBEXScore
-		local showEvents = SL["P"..n].ActiveModifiers.SBEvents
+
+		local showITG = SL["P" .. n].ActiveModifiers.SBITGScore
+		local showEX = SL["P" .. n].ActiveModifiers.SBEXScore
+		local showEvents = SL["P" .. n].ActiveModifiers.SBEvents
+
+		cur_style = 0
 
 		local numEntries = 0
-		if SL["P"..n].ActiveModifiers.ShowEXScore then
-			-- If the player is using EX scoring, then we want to display the EX leaderboard first.		
+		if SL["P" .. n].ActiveModifiers.ShowEXScore then
+			-- If the player is using EX scoring, then we want to display the EX leaderboard first.
 			if showEX then
 				if data[playerStr]["exLeaderboard"] then
 					numEntries = 0
 					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
 						numEntries = numEntries + 1
-						SetScoreData(1, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										true
-									)
+						SetScoreData(
+							1,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							true
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i = math.max(2, numEntries), 5, 1 do
 						SetScoreData(1, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -231,18 +235,20 @@ local LeaderboardRequestProcessor = function(res, master)
 					numEntries = 0
 					for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
 						numEntries = numEntries + 1
-						SetScoreData(2, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										boogie_ex
-									)
+						SetScoreData(
+							2,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							boogie_ex
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i = math.max(2, numEntries), 5, 1 do
 						SetScoreData(2, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -254,18 +260,20 @@ local LeaderboardRequestProcessor = function(res, master)
 					numEntries = 0
 					for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
 						numEntries = numEntries + 1
-						SetScoreData(1, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										boogie_ex
-									)
+						SetScoreData(
+							1,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							boogie_ex
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i = math.max(2, numEntries), 5, 1 do
 						SetScoreData(1, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -276,18 +284,20 @@ local LeaderboardRequestProcessor = function(res, master)
 					numEntries = 0
 					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
 						numEntries = numEntries + 1
-						SetScoreData(2, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										true
-									)
+						SetScoreData(
+							2,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							true
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i = math.max(2, numEntries), 5, 1 do
 						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -304,25 +314,21 @@ local LeaderboardRequestProcessor = function(res, master)
 				if data[playerStr]["rpg"]["rpgLeaderboard"] then
 					for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
 						numEntries = numEntries + 1
-						SetScoreData(3, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										false
-									)
+						SetScoreData(
+							3,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							false
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(3, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i = numEntries, 5, 1 do
+						SetScoreData(3, i, "", "", "", false, false, false)
 					end
 				end
 			end
@@ -336,32 +342,31 @@ local LeaderboardRequestProcessor = function(res, master)
 					for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
 						if entry["isSelf"] then
 							UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
-							SL["P"..n].itlScore = entry["score"]
-							local stepartist = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("StepArtistAF_P"..n)
+							SL["P" .. n].itlScore = entry["score"]
+							local stepartist = SCREENMAN:GetTopScreen()
+								:GetChild("Overlay")
+								:GetChild("PerPlayer")
+								:GetChild("StepArtistAF_P" .. n)
 							if stepartist ~= nil then
-							  stepartist:queuecommand("ITL")
+								stepartist:queuecommand("ITL")
 							end
 						end
 						numEntries = numEntries + 1
-						SetScoreData(4, numEntries,
-										tostring(entry["rank"]),
-										entry["name"],
-										string.format("%.2f", entry["score"]/100),
-										entry["isSelf"],
-										entry["isRival"],
-										entry["isFail"],
-										true
-									)
+						SetScoreData(
+							4,
+							numEntries,
+							tostring(entry["rank"]),
+							entry["name"],
+							string.format("%.2f", entry["score"] / 100),
+							entry["isSelf"],
+							entry["isRival"],
+							entry["isFail"],
+							true
+						)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(4, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i = numEntries, 5, 1 do
+						SetScoreData(4, i, "", "", "", false, false, false)
 					end
 				end
 			end
@@ -422,7 +427,7 @@ local af = Def.ActorFrame({
 		ResetAllData()
 		self.isFirst = true
 	end,
-	CheckScoreboxCommand=function(self)
+	CheckScoreboxCommand = function(self)
 		if GAMESTATE:GetCurrentSong() and GAMESTATE:GetCurrentSteps(player) then
 			self:queuecommand("LoopScorebox")
 		end
@@ -671,9 +676,9 @@ local af = Def.ActorFrame({
 		InitCommand = function(self)
 			self:zoom(0.8):diffusealpha(0.5)
 		end,
-		LoopScoreboxCommand=function(self)
+		LoopScoreboxCommand = function(self)
 			if cur_style == 0 or cur_style == 1 then
-				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.5)
+				self:sleep(transition_seconds / 2):linear(transition_seconds / 2):diffusealpha(0.5)
 			else
 				self:linear(transition_seconds / 2):diffusealpha(0)
 			end
@@ -708,7 +713,7 @@ local af = Def.ActorFrame({
 	}),
 	-- EX Text
 	Def.BitmapText({
-		Font = "Common Normal",
+		Font = ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text = "EX",
 		InitCommand = function(self)
 			self:diffusealpha(0):x(2):y(-5)
@@ -816,7 +821,7 @@ for i = 1, NumEntries do
 			end,
 		})
 	else
-		af[#af + 1] = LoadFont("Common Normal")
+		af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 			.. {
 				Name = "Rank" .. i,
 				Text = "",
@@ -859,7 +864,7 @@ for i = 1, NumEntries do
 			}
 	end
 
-	af[#af + 1] = LoadFont("Common Normal")
+	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 		.. {
 			Name = "Name" .. i,
 			Text = "",
@@ -901,7 +906,94 @@ for i = 1, NumEntries do
 			end,
 		}
 
-	af[#af + 1] = LoadFont("Common Normal")
+	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "Score" .. i,
+			Text = "",
+			InitCommand = function(self)
+				self:diffuse(Color.White):xy(-width / 2 + 160, y):horizalign(right):zoom(zoom)
+				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
+					self:x(-width / 2 + 140)
+				end
+			end,
+			PlayerJoinedMessageCommand = function(self, params)
+				if IsNotWide then
+					self:x(-width / 2 + 140)
+				else
+					self:x(-width / 2 + 160)
+				end
+			end,
+			PlayerUnjoinedMessageCommand = function(self, params)
+				self:x(-width / 2 + 160)
+			end,
+			LoopScoreboxCommand = function(self)
+				self:linear(transition_seconds / 2):diffusealpha(0):queuecommand("SetScorebox")
+			end,
+			SetScoreboxCommand = function(self)
+				local score = all_data[cur_style + 1]["scores"][i]
+				local clr = Color.White
+				if score.isFail then
+					clr = Color.Red
+				elseif score.isEx then
+					clr = SL.JudgmentColors["FA+"][1]
+				elseif score.isSelf then
+					clr = self_color
+				elseif score.isRival then
+					clr = rival_color
+				end
+				self:settext(score.score)
+				self:linear(transition_seconds / 2):diffusealpha(1):diffuse(clr)
+			end,
+			ResetCommand = function(self)
+				self:stoptweening()
+			end,
+			OffCommand = function(self)
+				self:stoptweening()
+			end,
+		}
+	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
+		.. {
+			Name = "Name" .. i,
+			Text = "",
+			InitCommand = function(self)
+				self:diffuse(Color.White):xy(-width / 2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
+				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
+					self:x(-width / 2 + 45):maxwidth(70)
+				end
+			end,
+			PlayerJoinedMessageCommand = function(self, params)
+				if IsNotWide then
+					self:x(-width / 2 + 45):maxwidth(70)
+				else
+					self:x(-width / 2 + 30):maxwidth(100)
+				end
+			end,
+			PlayerUnjoinedMessageCommand = function(self, params)
+				self:x(-width / 2 + 30):maxwidth(100)
+			end,
+			LoopScoreboxCommand = function(self)
+				self:linear(transition_seconds / 2):diffusealpha(0):queuecommand("SetScorebox")
+			end,
+			SetScoreboxCommand = function(self)
+				local score = all_data[cur_style + 1]["scores"][i]
+				local clr = Color.White
+				if score.isSelf then
+					clr = self_color
+				elseif score.isRival then
+					clr = rival_color
+				end
+				self:settext(score.name)
+				self:linear(transition_seconds / 2):diffusealpha(1):diffuse(clr)
+			end,
+			ResetCommand = function(self)
+				self:stoptweening()
+			end,
+			OffCommand = function(self)
+				self:stoptweening()
+			end,
+		}
+
+	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 		.. {
 			Name = "Score" .. i,
 			Text = "",

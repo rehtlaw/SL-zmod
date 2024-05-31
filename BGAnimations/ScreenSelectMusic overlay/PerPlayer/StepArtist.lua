@@ -139,24 +139,26 @@ return Def.ActorFrame({
 	}),
 
 	--STEPS label
-	LoadFont("Common Normal")
-		.. {
-			Text = GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
-			InitCommand = function(self)
-				self:diffuse(0, 0, 0, 1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
-			end,
-			UpdateTrailTextMessageCommand = function(self, params)
-				self:settext(THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index))
-			end,
-		},
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
+		InitCommand=function(self)
+			self:diffuse(0,0,0,1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
+		end,
+		UpdateTrailTextMessageCommand=function(self, params)
+			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
+		end
+	},
 
 	--stepartist text
-	LoadFont("Common Normal")
-		.. {
-			InitCommand = function(self)
-				self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
-				if GAMESTATE:IsCourseMode() then
-					self:x(60):maxwidth(138)
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		InitCommand=function(self)
+			self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
+			if GAMESTATE:IsCourseMode() then
+				self:x(60):maxwidth(138)
+			else
+				self:x(70):diffuse(color("#000000"))
+				if #GAMESTATE:GetHumanPlayers() == 1 then 
+					self:maxwidth(175)
 				else
 					self:x(70):diffuse(color("#000000"))
 					if #GAMESTATE:GetHumanPlayers() == 1 then

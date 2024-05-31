@@ -162,15 +162,47 @@ af2[#af2 + 1] = NPS_Histogram(player, width, height)
 af2[#af2]["CurrentSteps" .. pn .. "ChangedMessageCommand"] = nil
 
 -- The Peak NPS text
-af2[#af2 + 1] = LoadFont("Common Normal")
-	.. {
-		Name = "NPS",
-		Text = "",
-		InitCommand = function(self)
-			self:zoom(0.8)
-			if #GAMESTATE:GetHumanPlayers() == 1 then
-				self:settext("Peak NPS: \nPeak eBPM: ")
-				self:horizalign(left)
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+	Name="NPS",
+	Text="",
+	InitCommand=function(self)
+		self:zoom(0.8)
+		if #GAMESTATE:GetHumanPlayers() == 1 then 
+			self:settext("Peak NPS: \nPeak eBPM: ")
+			self:horizalign(left)
+			self:y(-50)
+			if player == PLAYER_1 then
+				self:x(60)
+			else					
+				self:x(-136)
+			end
+		else
+			self:horizalign("right")
+			self:y(-40)
+			if player == PLAYER_1 then 
+				self:x(140)
+			else
+				self:x(-55)
+			end
+			self:settext("Peak NPS: ")		
+		end
+		-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
+		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
+	end,
+	HideCommand=function(self)
+		if #GAMESTATE:GetHumanPlayers() == 1 then 
+			self:settext("Peak NPS: \nPeak eBPM: ")
+		else
+			self:settext("Peak NPS: ")
+		end
+		self:visible(false)
+	end,
+	RedrawCommand=function(self)
+		if leaving_screen then return end
+		if SL[pn].Streams.PeakNPS ~= 0 then
+			local nps = SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate
+			if #GAMESTATE:GetHumanPlayers() == 1 then 
+				self:horizalign("left")
 				self:y(-50)
 				if player == PLAYER_1 then
 					self:x(60)
@@ -269,10 +301,10 @@ af2[#af2 + 1] = Def.ActorFrame({
 		end,
 	}),
 
-	LoadFont("Common Normal") .. {
-		Text = "",
-		Name = "BreakdownText",
-		InitCommand = function(self)
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		Text="",
+		Name="BreakdownText",
+		InitCommand=function(self)
 			local textHeight = 17
 			local textZoom = 0.8
 			self:maxwidth(width / textZoom):zoom(textZoom)
@@ -374,49 +406,54 @@ local rowSpacing = 17
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
-		af3[#af3 + 1] = LoadFont("Common normal")
-			.. {
-				Text = col ~= "Total Stream" and "0" or "None (0.0%)",
-				Name = col .. "Value",
-				InitCommand = function(self)
-					local textHeight = 17
-					local textZoom = 0.7
-					self:zoom(textZoom):horizalign(right)
-					if col == "Total Stream" then
-						self:maxwidth(100)
-					end
-					self:xy(-width / 2 + 40, -height / 2 + 10)
-					self:addx((j - 1) * colSpacing)
-					self:addy((i - 1) * rowSpacing)
-				end,
-				HideCommand = function(self)
-					if col ~= "Total Stream" then
-						self:settext("0")
-					else
+		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+			Text=col ~= "Total Stream" and "0" or "None (0.0%)",
+			Name=col .. "Value",
+			InitCommand=function(self)
+				local textHeight = 17
+				local textZoom = 0.7
+				self:zoom(textZoom):horizalign(right)
+				if col == "Total Stream" then
+					self:maxwidth(100)
+				end
+				self:xy(-width/2 + 40, -height/2 + 10)
+				self:addx((j-1)*colSpacing)
+				self:addy((i-1)*rowSpacing)
+			end,
+			HideCommand=function(self)
+				if col ~= "Total Stream" then
+					self:settext("0")
+				else
+					self:settext("None (0.0%)")
+				end
+			end,
+			RedrawCommand=function(self)
+				if col ~= "Total Stream" then
+					self:settext(SL[pn].Streams[col])
+				else
+					local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+					local totalMeasures = streamMeasures + breakMeasures
+					if streamMeasures == 0 then
 						self:settext("None (0.0%)")
-					end
-				end,
-				RedrawCommand = function(self)
-					if col ~= "Total Stream" then
-						self:settext(SL[pn].Streams[col])
 					else
-						local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
-						local totalMeasures = streamMeasures + breakMeasures
-						if streamMeasures == 0 then
-							self:settext("None (0.0%)")
-						else
-							self:settext(
-								string.format(
-									"%d/%d (%0.2f%%)",
-									streamMeasures,
-									totalMeasures,
-									streamMeasures / totalMeasures * 100
-								)
-							)
-						end
+						self:settext(string.format("%d/%d (%0.2f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100))
 					end
-				end,
-			}
+				end
+			end
+		}
+
+		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+			Text=col,
+			Name=col,
+			InitCommand=function(self)
+				local textHeight = 17
+				local textZoom = 0.8
+				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
+				self:xy(-width/2 + 50, -height/2 + 10)
+				self:addx((j-1)*colSpacing)
+				self:addy((i-1)*rowSpacing)
+			end,
+		}
 
 		af3[#af3 + 1] = LoadFont("Common Normal")
 			.. {
