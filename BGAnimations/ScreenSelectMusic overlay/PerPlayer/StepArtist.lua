@@ -121,17 +121,7 @@ return Def.ActorFrame({
 				local difficulty = StepsOrTrail:GetDifficulty()
 				self:diffuse(DifficultyColor(difficulty))
 				text_table = GetStepsCredit(player)
-				if #GAMESTATE:GetHumanPlayers() == 1 then
-					if #text_table == 3 then
-						self:fadebottom(0)
-					elseif #text_table == 2 then
-						self:fadebottom(0.5)
-					elseif #text_table == 1 then
-						self:fadebottom(0.8)
-					end
-				else
-					self:fadebottom(0)
-				end
+				self:fadebottom(0)
 			else
 				self:diffuse(PlayerColor(player))
 			end
