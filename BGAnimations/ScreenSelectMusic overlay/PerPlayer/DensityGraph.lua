@@ -61,7 +61,7 @@ local af = Def.ActorFrame({
 		end
 	end,
 	PlayerUnjoinedMessageCommand = function(self, params)
-		self:x(_screen.cx - 152)
+		self:x(_screen.cx - 158)
 		self:y(_screen.cy + 62)
 		if player == PLAYER_2 then
 			self:addy(height + 24)
