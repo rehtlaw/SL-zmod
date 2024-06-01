@@ -940,46 +940,5 @@ for i = 1, NumEntries do
 				self:stoptweening()
 			end,
 		}
-	af[#af + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
-		.. {
-			Name = "Name" .. i,
-			Text = "",
-			InitCommand = function(self)
-				self:diffuse(Color.White):xy(-width / 2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
-				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-					self:x(-width / 2 + 45):maxwidth(70)
-				end
-			end,
-			PlayerJoinedMessageCommand = function(self, params)
-				if IsNotWide then
-					self:x(-width / 2 + 45):maxwidth(70)
-				else
-					self:x(-width / 2 + 30):maxwidth(100)
-				end
-			end,
-			PlayerUnjoinedMessageCommand = function(self, params)
-				self:x(-width / 2 + 30):maxwidth(100)
-			end,
-			LoopScoreboxCommand = function(self)
-				self:linear(transition_seconds / 2):diffusealpha(0):queuecommand("SetScorebox")
-			end,
-			SetScoreboxCommand = function(self)
-				local score = all_data[cur_style + 1]["scores"][i]
-				local clr = Color.White
-				if score.isSelf then
-					clr = self_color
-				elseif score.isRival then
-					clr = rival_color
-				end
-				self:settext(score.name)
-				self:linear(transition_seconds / 2):diffusealpha(1):diffuse(clr)
-			end,
-			ResetCommand = function(self)
-				self:stoptweening()
-			end,
-			OffCommand = function(self)
-				self:stoptweening()
-			end,
-		}
 end
 return af
