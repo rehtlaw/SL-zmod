@@ -249,7 +249,7 @@ SL = {
 			color("#ff3030"), -- red (slightly lightened)
 		},
 		ITG = {
-			color("#21CCE8"), -- blue
+			color("#FF00BE"), -- blue
 			color("#e29c18"), -- gold
 			color("#66c955"), -- green
 			color("#b45cff"), -- purple (greatly lightened)
