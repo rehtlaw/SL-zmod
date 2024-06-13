@@ -67,6 +67,8 @@ for w=NumJudgmentsAvailable(),1,-1 do
 	end
 end
 
+colors[1] = SL.JudgmentColors["FA+"][1]
+
 -- ---------------------------------------------
 
 -- Initialize vertices table of tables and start the stepcount
