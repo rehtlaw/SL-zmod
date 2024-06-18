@@ -469,7 +469,7 @@ local af = Def.ActorFrame({
 		self:GetChild("GrooveStatsLogo"):stopeffect()
 		self:GetChild("BoogieStatsLogo"):stopeffect()
 		self:GetChild("BoogieStatsEXLogo"):stopeffect()
-		self:GetChild("SRPG7Logo"):visible(true)
+		self:GetChild("SRPG8Logo"):visible(true)
 		self:GetChild("ITLLogo"):visible(true)
 		self:GetChild("Outline"):visible(true)
 		self:GetChild("Background"):linear(transition_seconds / 2):diffusealpha(1):visible(true)
@@ -578,7 +578,7 @@ local af = Def.ActorFrame({
 					:glowshift({ color("#C8FFFF"), color("#6BF0FF") })
 				self:GetParent():GetChild("BoogieStatsLogo"):visible(false)
 				self:GetParent():GetChild("BoogieStatsEXLogo"):visible(false)
-				self:GetParent():GetChild("SRPG7Logo"):diffusealpha(0):visible(false)
+				self:GetParent():GetChild("SRPG8Logo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Outline"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Background"):diffusealpha(0):visible(false)
@@ -729,11 +729,11 @@ local af = Def.ActorFrame({
 		end,
 	}),
 	-- SRPG Logo
-	Def.Sprite({
-		Texture = THEME:GetPathG("", "_VisualStyles/SRPG7/logo_main (doubleres).png"),
-		Name = "SRPG7Logo",
-		InitCommand = function(self)
-			self:diffusealpha(0.4):zoom(0.03):diffusealpha(0)
+	Def.Sprite{
+		Texture=THEME:GetPathG("", "rpg8 (doubleres).png"),
+		Name="SRPG8Logo",
+		InitCommand=function(self)
+			self:diffusealpha(0.4):zoom(0.3):diffusealpha(0)
 		end,
 		LoopScoreboxCommand = function(self)
 			if cur_style == 2 then
