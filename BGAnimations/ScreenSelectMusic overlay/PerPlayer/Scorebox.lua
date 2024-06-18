@@ -729,10 +729,10 @@ local af = Def.ActorFrame({
 		end,
 	}),
 	-- SRPG Logo
-	Def.Sprite{
-		Texture=THEME:GetPathG("", "rpg8 (doubleres).png"),
-		Name="SRPG8Logo",
-		InitCommand=function(self)
+	Def.Sprite({
+		Texture = THEME:GetPathG("", "rpg8 (doubleres).png"),
+		Name = "SRPG8Logo",
+		InitCommand = function(self)
 			self:diffusealpha(0.4):zoom(0.3):diffusealpha(0)
 		end,
 		LoopScoreboxCommand = function(self)
