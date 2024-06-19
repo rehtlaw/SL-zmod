@@ -24,6 +24,9 @@ local function CloseFolder()
 	wheel:Move(-1)
 	wheel:Move(0)
 end
+-- In 2-players mode, whether the DensityGraph or PatternInfo is shown
+-- Can be toggled by the code "ToggleChartInfo" in metrics.ini
+local showPatternInfo = false
 
 local af = Def.ActorFrame({
 	InitCommand = function(self)
@@ -85,6 +88,7 @@ local af = Def.ActorFrame({
 			-- Only need to toggle in versus since in single player modes, both
 			-- panes are already displayed.
 			if GAMESTATE:GetNumSidesJoined() == 2 then
+				showPatternInfo = not showPatternInfo
 				self:queuecommand("TogglePatternInfo")
 			end
 		elseif
@@ -154,10 +158,10 @@ af2[#af2 + 1] = NPS_Histogram(player, width, height)
 			self:visible(false)
 		end,
 		RedrawCommand = function(self)
-			self:visible(true)
+			self:visible(not showPatternInfo)
 		end,
 		TogglePatternInfoCommand = function(self)
-			self:visible(not self:GetVisible())
+			self:visible(not showPatternInfo)
 		end,
 	}
 -- Don't let the density graph parse the chart.
@@ -217,38 +221,6 @@ af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 				self:visible(true)
 			end
 		end,
-		HideCommand = function(self)
-			if #GAMESTATE:GetHumanPlayers() == 1 then
-				self:settext("Peak NPS: \nPeak eBPM: ")
-			else
-				self:settext("Peak NPS: ")
-			end
-			self:visible(false)
-		end,
-		RedrawCommand = function(self)
-			if leaving_screen then
-				return
-			end
-			if SL[pn].Streams.PeakNPS ~= 0 then
-				local nps = SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate
-				if #GAMESTATE:GetHumanPlayers() == 1 then
-					self:horizalign("left")
-					self:y(-50)
-					self:x(60)
-					self:settext(("Peak NPS: %.1f\nPeak eBPM: %.0f"):format(nps, nps * 15))
-				else
-					self:horizalign("right")
-					self:y(-40)
-					self:x(140)
-					marquee_index = 0
-					text_table = {}
-					table.insert(text_table, ("Peak NPS: %.1f"):format(nps))
-					table.insert(text_table, ("Peak eBPM: %.1f"):format(nps * 15))
-					self:finishtweening():playcommand("Marquee", { text_table = text_table })
-				end
-				self:visible(true)
-			end
-		end,
 		MarqueeCommand = function(self)
 			marquee_index = (marquee_index % #text_table) + 1
 			if #GAMESTATE:GetHumanPlayers() > 1 then
@@ -261,7 +233,7 @@ af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 			self:stoptweening()
 		end,
 		TogglePatternInfoCommand = function(self)
-			self:visible(not self:GetVisible())
+			self:visible(not showPatternInfo)
 		end,
 	}
 
@@ -276,10 +248,10 @@ af2[#af2 + 1] = Def.ActorFrame({
 		self:visible(false)
 	end,
 	RedrawCommand = function(self)
-		self:visible(true)
+		self:visible(not showPatternInfo)
 	end,
 	TogglePatternInfoCommand = function(self)
-		self:visible(not self:GetVisible())
+		self:visible(not showPatternInfo)
 	end,
 	Def.Quad({
 		InitCommand = function(self)
@@ -365,7 +337,7 @@ af2[#af2 + 1] = Def.ActorFrame({
 		end
 	end,
 	TogglePatternInfoCommand = function(self)
-		self:visible(not self:GetVisible())
+		self:visible(showPatternInfo)
 	end,
 
 	-- Background for the additional chart info.
