@@ -748,7 +748,7 @@ local af = Def.ActorFrame({
 		OffCommand = function(self)
 			self:stoptweening()
 		end,
-	}),
+	},
 	-- ITL Logo
 	Def.Sprite({
 		Texture = THEME:GetPathG("", "ITL.png"),
