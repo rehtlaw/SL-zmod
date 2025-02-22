@@ -187,7 +187,7 @@ af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
 				self:settext("Peak NPS: ")
 			end
 			-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
-			self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and { 0, 0, 0, 1 } or { 1, 1, 1, 1 })
+			self:diffuse({ 0, 0, 0, 1 })
 		end,
 		HideCommand = function(self)
 			if #GAMESTATE:GetHumanPlayers() == 1 then
