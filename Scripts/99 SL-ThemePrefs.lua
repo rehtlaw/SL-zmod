@@ -52,7 +52,7 @@ SL_CustomPrefs.Get = function()
 		},
 		HideStockNoteSkins =
 		{
-			Default = false,
+			Default = true,
 			Choices = { THEME:GetString("ThemePrefs", "Show"), THEME:GetString("ThemePrefs", "Hide") },
 			Values  = { false, true }
 		},
@@ -115,7 +115,7 @@ SL_CustomPrefs.Get = function()
 			Values	= { true, false }
 		},
 		KeyboardFeatures = {
-			Default = false,
+			Default = true,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values	= { true, false }
 		},
@@ -249,7 +249,7 @@ SL_CustomPrefs.Get = function()
 		-- nice meme
 		-- 0 is off, 1 is visuals only, 2 is visuals and sound.
 		nice = {
-			Default = 0,
+			Default = 2,
 			Choices = { THEME:GetString("ThemePrefs","Off"), THEME:GetString("ThemePrefs","On"), THEME:GetString("ThemePrefs","OnWithSound") },
 			Values  = { 0, 1, 2 }
 		},
@@ -282,7 +282,7 @@ SL_CustomPrefs.Get = function()
 		},
 		-- - - - - - - - - - - - - - - - - - - -
 		EnableGrooveStats = {
-			Default = false,
+			Default = true,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
 		},
@@ -332,7 +332,7 @@ SL_CustomPrefs.Get = function()
 		},
 		ITGDiffColors =
 		{
-			Default = "Simply Love",
+			Default = "ITG",
 			Choices = { "Simply Love", "ITG", "DDR" }
 		},
 		AnimateBanners =
