@@ -3,7 +3,19 @@ git remote add upstream https://github.com/zarzob/Simply-Love-SM5
 git pull upstream itgmania-release --no-rebase
 ```
 
+![](https://raw.githubusercontent.com/rehtlaw/SL-zmod/refs/heads/itgmania-release/Other/screenshot.png)
+
 This mod does not support anything but 16:9. 4:3 will absolutely break, 21:9 is very likely to break too, and 16:10 might work, but isn't tested for.
+
+my changes:
+
+- change styles to Simply Gensokyo (also found in the [Simply Styles](https://drive.google.com/drive/folders/1cYyTbQWaVeqo2GfQx4srW3qiDuJ6maeZ?usp=sharing) repository)
+- swap UD and LR for the songwheel
+- rotate difficulties to be horizontal and move it to the bottom
+- change white fantastic colour to regular fantastic blue, change blue fantastics to Masterful magenta (from Waterfall) and rename it to Masterful
+- change ITG diff colours to the WF colour difficulties
+- change default settigs to something better
+- add some extra songfiles and judgment fonts
 
 # Zmod fork of Simply Love
 
