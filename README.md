@@ -14,7 +14,7 @@ my changes:
 - rotate difficulties to be horizontal and move it to the bottom
 - change white fantastic colour to regular fantastic blue, change blue fantastics to Masterful magenta (from Waterfall) and rename it to Masterful
 - change ITG diff colours to the WF colour difficulties
-- change default settigs to something better
+- change default settings to something better
 - add some extra songfiles and judgment fonts
 
 # Zmod fork of Simply Love
