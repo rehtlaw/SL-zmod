@@ -107,7 +107,7 @@ local GetScoresRequestProcessor = function(res, params)
 
 		-- First check to see if the leaderboard even exists.
 		if data and data[playerStr] then
-			local showExScore = SL["P" .. i].ActiveModifiers.ShowEXScore and data[playerStr]["exLeaderboard"] ~= nil
+			local showExScore = SL["P"..i].ActiveModifiers.ShowExScore and data[playerStr]["exLeaderboard"] ~= nil
 			local leaderboardData = nil
 			if showExScore then
 				leaderboardData = data[playerStr]["exLeaderboard"]
@@ -260,20 +260,20 @@ local GetScoresRequestProcessor = function(res, params)
 						loadingText:settext("BoogieStats")
 					elseif boogie_ex then
 						loadingText:settext("Boogie EX")
-					elseif SL["P" .. i].ActiveModifiers.ShowEXScore then
-						loadingText:settext("EX Score")
+					elseif SL["P"..i].ActiveModifiers.ShowExScore then
+						loadingText:settext(THEME:GetString("Groovestats", "ExScore"))
 					else
-						loadingText:settext("GrooveStats")
+						loadingText:settext(THEME:GetString("GrooveStats", "GrooveStats"))
 					end
 				else
 					if boogie then
 						loadingText:settext("No Boogie Data")
 					elseif boogie_ex then
 						loadingText:settext("No Boogie EX")
-					elseif SL["P" .. i].ActiveModifiers.ShowEXScore then
-						loadingText:settext("No EX Data")
+					elseif SL["P"..i].ActiveModifiers.ShowExScore then
+						loadingText:settext(THEME:GetString("Groovestats", "NoEXData"))
 					else
-						loadingText:settext("No Data")
+						loadingText:settext(THEME:GetString("GrooveStats", "NoData"))
 					end
 				end
 			else
@@ -340,73 +340,69 @@ af[#af + 1] = RequestResponseActor(17, 50)
 		ChartParsedCommand = function(self)
 			local master = self:GetParent()
 
-			if not IsServiceAllowed(SL.GrooveStats.GetScores) then
-				if SL.GrooveStats.IsConnected then
-					-- loadingText is made visible when requests complete.
-					-- If we disable the service from a previous request, surface it to the user here.
-					for i = 1, 2 do
-						local loadingText = master:GetChild("PaneDisplayP" .. i):GetChild("Loading")
-						loadingText:settext("Disabled")
-						loadingText:visible(true)
-					end
-				end
-				return
-			end
-
-			-- Make sure we're still not parsing either chart.
-			if self.IsParsing[1] or self.IsParsing[2] then
-				return
-			end
-
-			-- This makes sure that the Hash in the ChartInfo cache exists.
-			local sendRequest = false
-			local headers = {}
-			local query = {
-				maxLeaderboardResults = NumEntries,
-			}
-			local requestCacheKey = ""
-
-			if ThemePrefs.Get("MusicWheelGS") == "Pane" then
-				for i = 1, 2 do
-					local pn = "P" .. i
-					if IsItlSong(PlayerNumber[i]) then
-						UpdatePathMap(PlayerNumber[i], SL[pn].Streams.Hash)
-					end
-					if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
-						query["chartHashP" .. i] = SL[pn].Streams.Hash
-						headers["x-api-key-player-" .. i] = SL[pn].ApiKey
-						requestCacheKey = requestCacheKey .. SL[pn].Streams.Hash .. SL[pn].ApiKey .. pn
-						local loadingText = master:GetChild("PaneDisplayP" .. i):GetChild("Loading")
-						loadingText:visible(true)
-						loadingText:settext("Loading ..."):diffuse(Color.Black)
-						sendRequest = true
-					end
+		if not IsServiceAllowed(SL.GrooveStats.GetScores) then
+			if SL.GrooveStats.IsConnected then
+				-- loadingText is made visible when requests complete.
+				-- If we disable the service from a previous request, surface it to the user here.
+				for i=1,2 do
+					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
+					loadingText:settext(THEME:GetString("GrooveStats", "Disabled"))
+					loadingText:visible(true)
 				end
 			end
 
-			-- Only send the request if it's applicable.
-			if sendRequest then
-				requestCacheKey = CRYPTMAN:SHA256String(requestCacheKey .. "-player-scores")
-				local params = { requestCacheKey = requestCacheKey, master = master }
-				RemoveStaleCachedRequests()
-				-- If the data is still in the cache, run the request processor directly
-				-- without making a request with the cached response.
-				if SL.GrooveStats.RequestCache[requestCacheKey] ~= nil then
-					local res = SL.GrooveStats.RequestCache[requestCacheKey].Response
-					GetScoresRequestProcessor(res, params)
-				else
-					self:playcommand("MakeGrooveStatsRequest", {
-						endpoint = "player-scores.php?" .. NETWORK:EncodeQueryParameters(query),
-						method = "GET",
-						headers = headers,
-						timeout = 10,
-						callback = GetScoresRequestProcessor,
-						args = params,
-					})
+		-- Make sure we're still not parsing either chart.
+		if self.IsParsing[1] or self.IsParsing[2] then return end
+
+		-- This makes sure that the Hash in the ChartInfo cache exists.
+		local sendRequest = false
+		local headers = {}
+		local query = {
+			maxLeaderboardResults=NumEntries,
+		}
+		local requestCacheKey = ""
+
+		if ThemePrefs.Get("MusicWheelGS") == "Pane" then
+			for i=1,2 do
+				local pn = "P"..i
+				if IsItlSong(PlayerNumber[i]) then
+					UpdatePathMap(PlayerNumber[i], SL[pn].Streams.Hash)
+				end
+				if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
+					query["chartHashP"..i] = SL[pn].Streams.Hash
+					headers["x-api-key-player-"..i] = SL[pn].ApiKey
+					requestCacheKey = requestCacheKey .. SL[pn].Streams.Hash .. SL[pn].ApiKey .. pn
+					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
+					loadingText:visible(true)
+					loadingText:settext(THEME:GetString("Groovestats", "Loading")):diffuse(Color.Black)
+					sendRequest = true
 				end
 			end
-		end,
-	}
+		end
+
+		-- Only send the request if it's applicable.
+		if sendRequest then
+			requestCacheKey = CRYPTMAN:SHA256String(requestCacheKey.."-player-scores")
+			local params = {requestCacheKey=requestCacheKey, master=master}
+			RemoveStaleCachedRequests()
+			-- If the data is still in the cache, run the request processor directly
+			-- without making a request with the cached response.
+			if SL.GrooveStats.RequestCache[requestCacheKey] ~= nil then
+				local res = SL.GrooveStats.RequestCache[requestCacheKey].Response
+				GetScoresRequestProcessor(res, params)
+			else
+				self:playcommand("MakeGrooveStatsRequest", {
+					endpoint="player-scores.php?"..NETWORK:EncodeQueryParameters(query),
+					method="GET",
+					headers=headers,
+					timeout=10,
+					callback=GetScoresRequestProcessor,
+					args=params,
+				})
+			end
+		end
+	end,
+}
 
 for player in ivalues(PlayerNumber) do
 	local pn = ToEnumShortString(player)
@@ -658,21 +654,20 @@ for player in ivalues(PlayerNumber) do
 			end,
 		}
 
-	af2[#af2 + 1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")
-		.. {
-			Name = "Loading",
-			Text = "Loading ... ",
-			InitCommand = function(self)
-				self:zoom(text_zoom):diffuse(Color.Black)
-				self:x(pos.col[3] - 15)
-				self:y(pos.row[3])
-				self:visible(false)
-			end,
-			SetCommand = function(self)
-				self:settext("Loading ...")
-				self:visible(false)
-			end,
-		}
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		Name="Loading",
+		Text=THEME:GetString("GrooveStats", "Loading"),
+		InitCommand=function(self)
+			self:zoom(text_zoom):diffuse(Color.Black)
+			self:x(pos.col[3]-15)
+			self:y(pos.row[3])
+			self:visible(false)
+		end,
+		SetCommand=function(self)
+			self:settext(THEME:GetString("GrooveStats", "Loading"))
+			self:visible(false)
+		end
+	}
 
 	-- Chart Difficulty Meter
 	af2[#af2 + 1] = LoadFont("Wendy/_wendy small")

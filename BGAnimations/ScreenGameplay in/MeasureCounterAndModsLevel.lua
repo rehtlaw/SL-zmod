@@ -8,9 +8,10 @@ return function(SongNumberInCourse)
 		local pn = ToEnumShortString(player)
 		SL[pn].PlayerOptionsString = GAMESTATE:GetPlayerState(player):GetPlayerOptionsString("ModsLevel_Preferred")
 
-		-- Check if MeasureCounter is turned on.  We may need to parse the chart.
+		-- Check if MeasureCounter or ColumnCues are turned on.
+		-- We may need to parse the chart
 		local mods = SL[pn].ActiveModifiers
-		if mods.MeasureCounter and mods.MeasureCounter ~= "None" then
+		if (mods.MeasureCounter and mods.MeasureCounter ~= "None") or mods.ColumnCues or mods.ColumnCountdown then
 
 			local steps = nil
 
@@ -25,9 +26,11 @@ return function(SongNumberInCourse)
 			-- The function will only do work iff we're parsing a chart different than what's in the cache.
 			ParseChartInfo(steps, pn)
 
-			-- Set the actual stream information for the player based on their selected notes threshold.
-			local notesThreshold = tonumber(mods.MeasureCounter:match("%d+"))
-			SL[pn].Streams.Measures = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, notesThreshold)
+			if (mods.MeasureCounter and mods.MeasureCounter ~= "None") then
+				-- Set the actual stream information for the player based on their selected notes threshold.
+				local notesThreshold = tonumber(mods.MeasureCounter:match("%d+"))
+				SL[pn].Streams.Measures = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, notesThreshold)
+			end
 		end
 	end
 end

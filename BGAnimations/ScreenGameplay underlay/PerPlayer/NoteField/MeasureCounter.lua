@@ -108,7 +108,7 @@ end
 
 local Update = function(self, delta)
 	-- Check to make sure we even have any streams populated to display.
-	if not streams.Measures or #streams.Measures == 0 then return end
+	if not streams or not streams.Measures or #streams.Measures == 0 then return end
 
 	-- Things to look into:
 	-- 1. Does PlayerState:GetSongPosition() take split timing into consideration?  Do we need to?
@@ -152,9 +152,7 @@ local Update = function(self, delta)
 				if not isLookAhead then
 					if string.find(text, "/") then
 						bmt[adjustedIndex]:diffuse(1, 1, 1, 1)
-						-- if streams.Measures[streamIndex] and not streams.Measures[streamIndex].isBreak then
 						SL[pn].MeasuresCompleted = SL[pn].MeasuresCompleted + 0.25
-						-- end
 					else
 						-- If this is a mini-break, make it lighter.
 						bmt[adjustedIndex]:diffuse(0.5, 0.5, 0.5 ,1)

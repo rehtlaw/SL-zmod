@@ -11,7 +11,8 @@ This mod does not support anything but 16:9. 4:3 will absolutely break, 21:9 is 
 my changes:
 
 - change styles to Simply Gensokyo (also found in the [Simply Styles](https://drive.google.com/drive/folders/1cYyTbQWaVeqo2GfQx4srW3qiDuJ6maeZ?usp=sharing) repository)
-- swap UD and LR for the songwheel
+- swap MenuUp/MenuDown and MenuLeft/MenuRight on the song wheel
+- closing folders is always MenuUp+MenuDown
 - rotate difficulties to be horizontal and move it to the bottom
 - change white fantastic colour to regular fantastic blue, change blue fantastics to Masterful magenta (from Waterfall) and rename it to Masterful
 - change ITG diff colours to the WF colour difficulties
@@ -90,9 +91,9 @@ Contact us on Discord at `zarzob` or `zankoku`. Alternatively you can join my [d
 
 Stuff that might be good to implement in the near future
 
-- SRPG support for corner event box (was removed due to new mainline implementation)
-- Automatic translation of player options from mainline profile into zmod, preserve mainline profile - `zankoku`
-- Automatically reset ratemod to 1.00 once a song is played - `zankoku`
-- Theme option to display leaderboard instead of event box in corner - `zankoku`
-- 10/15ms split functionality for error bars
-- Variablise RPG / ITL iteration for folder name searches
+* SRPG support for corner event box (was removed due to new mainline implementation)
+* Automatic translation of player options from mainline profile into zmod, preserve mainline profile - `zankoku`
+* Automatically reset ratemod to 1.00 once a song is played - `zankoku`
+* Theme option to display leaderboard instead of event box in corner - `zankoku`
+* 10/15ms split functionality for error bars - `zarzob`
+* Variablise RPG / ITL iteration for folder name searches

@@ -1,3 +1,5 @@
+local holdingCtrl = false
+
 local RestartHandler = function(event)
 	if not event then return end
 
@@ -18,7 +20,6 @@ local RestartHandler = function(event)
 end
 
 local t = Def.ActorFrame{
-	Name="GameplayUnderlay",
 	OnCommand=function(self)
 		if ThemePrefs.Get("KeyboardFeatures") and PREFSMAN:GetPreference("EventMode") and not GAMESTATE:IsCourseMode() then
 			SCREENMAN:GetTopScreen():AddInputCallback(RestartHandler)

@@ -6,6 +6,9 @@ local af = Def.ActorFrame{
 	InitCommand=function(self)
 		SL.Global.GameplayReloadCheck = false
 		generateFavoritesForMusicWheel()
+		
+		-- reset song start time here in case player force-escaped
+		start_time = -1
 
 		-- While other SM versions don't need this, Outfox resets the
 		-- the music rate to 1 between songs, but we want to be using
@@ -28,7 +31,20 @@ local af = Def.ActorFrame{
 		end
 		ApplyMods(params.Player)
 	end,
-
+	CodeMessageCommand=function(self, params)
+		if params.Name == "Favorite1" or params.Name == "Favorite2" then
+			addOrRemoveFavorite(params.PlayerNumber)
+		end
+	end,
+	ReloadScreenForMemoryCardsMessageCommand=function(self, params)
+		-- Wait some time for the profile screen to finish transitioning
+		-- before reloading the screen.
+		self:sleep(0.10):queuecommand("Reload")
+	end,
+	ReloadCommand=function(self)
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSM")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+	end,
 	-- ---------------------------------------------------
 	--  first, load files that contain no visual elements, just code that needs to run
 

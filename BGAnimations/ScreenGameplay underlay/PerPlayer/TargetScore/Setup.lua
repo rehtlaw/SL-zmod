@@ -25,7 +25,7 @@ local GetTopScore = function(kind)
 	if scorelist then
 		local topscore = scorelist:GetHighScores()[1]
 		if topscore then
-			if SL[pn].ActiveModifiers.ShowEXScore then
+			if SL[pn].ActiveModifiers.ShowExScore then
 				local counts = {}
 				counts["W0"] = topscore:GetTapNoteScore("TapNoteScore_W1") - topscore:GetScore()
 				counts["W1"] = topscore:GetScore()
@@ -133,11 +133,6 @@ else
 	-- player set TargetGrade as a particular score
 	-- pull from that option
 	target_grade_score = tonumber(SL[pn].ActiveModifiers.TargetScoreNumber) / 100
-end
-
--- if there is no personal/machine score, default to S as target
-if target_grade_score == 0 then
-	target_grade_score = THEME:GetMetric("PlayerStageStats", "GradePercentTier06")
 end
 
 -- ---------------------------------------------------------------

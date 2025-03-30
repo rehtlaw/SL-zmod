@@ -128,6 +128,49 @@ local AttemptDownloads = function(res)
 	end
 end
 
+local ScreenshotQR = function(playernum)
+	-- format a localized month string like "06-June" or "12-Diciembre"
+	local month = ("%02d-%s"):format(MonthOfYear()+1, THEME:GetString("Months", "Month"..MonthOfYear()+1))
+
+	-- get the FullTitle of the song or course that was just played
+	local title = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle() or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
+
+	-- song titles can be very long, and the engine's SaveScreenshot() function
+	-- is already hardcoded to make the filename long via DateTime::GetNowDateTime()
+	-- so, let's use only the first 25 characters of the title in the screenshot filename
+	title = title:utf8sub(1,25)
+
+	-- substitute all symbols with underscores to avoid file name conflicts
+	title = title:gsub("%W", "_")
+
+	-- organize screenshots Love into directories, like...
+	--      ./Screenshots/Simply_Love/2020/04-April/DVNO-2020-04-22_175951.png
+	-- note that the engine's SaveScreenshot() function will convert whitespace
+	-- characters to underscores, so we might as well just use underscores here
+	local prefix = "Simply_Love/QRCodes/" .. Year() .. "/" .. month .. "/"
+	local suffix = "_" .. title
+
+	-- attempt to write a screenshot to disk
+	-- arg1 is playernumber that requsted the screenshot; if they are using a profile, the screenshot will be saved there
+	-- arg2 is a boolean for whether to use lossy compression on the screenshot before writing to disk
+	-- arg3 is a boolean for whther to have CRYPTMAN use the machine's private key to sign the screenshot
+	--      (there is currently no online system in place that I know that would benefit from that^)
+	-- arg4 is an optional string to prefix the filename with
+	-- arg5 is an optional string to append to the end of the filename
+	--
+	-- first return value is boolean indicating success/failure to write to disk
+	-- second return value is
+	--     (directory + filename) if write to disk was successful
+	--     (filename)             if write to disk failed
+		
+	local success, path = SaveScreenshot(playernum, false, false , prefix, suffix)
+
+	if success then
+		MESSAGEMAN:Broadcast("ScreenshotCurrentScreen")
+		SM("Automatically saved QR screenshot")
+	end
+end
+
 local AutoSubmitRequestProcessor = function(res, overlay)
 	local P1SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P1SubmitText")
 	local P2SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P2SubmitText")
@@ -189,7 +232,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 				-- It's better to just not display anything than display the wrong scores.
 				if SL["P"..side].Streams.Hash == data[playerStr]["chartHash"] then
 					local personalRank = nil
-					local showExScore = SL["P"..side].ActiveModifiers.ShowEXScore and data[playerStr]["exLeaderboard"]
+					local showExScore = SL["P"..side].ActiveModifiers.ShowExScore and data[playerStr]["exLeaderboard"]
 
 					local leaderboardData = nil
 					if showExScore then
@@ -207,7 +250,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								gsEntry["rank"]..".",
 								GetMachineTag(gsEntry),
 								string.format("%.2f%%", gsEntry["score"]/100),
-								ParseGroovestatsDate(gsEntry["date"]),
+								ParseGrooveStatsDate(gsEntry["date"]),
 								entry
 							)
 
@@ -234,7 +277,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						end
 
 						QRPane:GetChild("QRCode"):queuecommand("Hide")
-						QRPane:GetChild("HelpText"):settext("Score has already been submitted :)")
+						QRPane:GetChild("HelpText"):settext(THEME:GetString("GrooveStats", "ScoreAlreadySubmitted"))
 						if i == 1 and P1SubmitText then
 							P1SubmitText:queuecommand("Submit")
 						elseif i == 2 and P2SubmitText then
@@ -282,7 +325,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								gsEntry["rank"]..".",
 								GetMachineTag(gsEntry),
 								string.format("%.2f%%", gsEntry["score"]/100),
-								ParseGroovestatsDate(gsEntry["date"]),
+								ParseGrooveStatsDate(gsEntry["date"]),
 								entry
 							)
 							-- ITL leaderboard is EX scores, so highlight them blue.
@@ -328,7 +371,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3)
 								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
 								if personalRank == 1 then
-									local worldRecordText = "World Record!"
+									local worldRecordText = THEME:GetString("GrooveStats", "WorldRecord")
 									if showExScore then
 										worldRecordText = worldRecordText .. " (EX)"
 									end
@@ -340,7 +383,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 										SOUND:PlayOnce(audio_files[math.random(#audio_files)])
 									end
 								else
-									recordText:settext("Personal Best!")
+									recordText:settext(THEME:GetString("GrooveStats", "PersonalBest"))
 									-- Play random sound in Sounds/Evaluation PB/
 									soundDir = soundDir .. "Evaluation PB/"
 									audio_files = findFiles(soundDir)
@@ -441,7 +484,7 @@ local af = Def.ActorFrame {
 			}
 			local body = {}
 
-			local rate = SL.Global.ActiveModifiers.MusicRate * 100
+			local rate = tonumber(string.format("%.0f", SL.Global.ActiveModifiers.MusicRate * 100))
 			for i=1,2 do
 				local player = "PlayerNumber_P"..i
 				local pn = ToEnumShortString(player)
@@ -489,9 +532,10 @@ local af = Def.ActorFrame {
 			-- Only send the request if it's applicable.
 			if sendRequest then
 				-- Unjoined players won't have the text displayed.
-				self:GetParent():GetChild("P1SubmitText"):settext("Submitting ...")
-				self:GetParent():GetChild("P2SubmitText"):settext("Submitting ...")
-
+             
+                self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
+				self:GetParent():GetChild("P2SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
+					
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="score-submit.php?"..NETWORK:EncodeQueryParameters(query),
 					method="POST",
@@ -499,7 +543,7 @@ local af = Def.ActorFrame {
 					body=JsonEncode(body),
 					timeout=30,
 					callback=AutoSubmitRequestProcessor,
-					args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
+				args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
 				})
 			end
 		end
@@ -523,14 +567,39 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_1))
 	end,
 	SubmitCommand=function(self)
-		self:settext("Submitted!")
+		self:settext(THEME:GetString("GrooveStats", "Submitted"))
 	end,
 	SubmitFailedCommand=function(self)
-		self:settext("Submit Failed 😞")
+		self:settext(THEME:GetString("GrooveStats", "SubmitFailed"))
 		DiffuseEmojis(self)
+		
+		if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
+		end
 	end,
 	TimedOutCommand=function(self)
-		self:settext("Timed Out")
+		self:settext(THEME:GetString("GrooveStats", "TimedOut"))
+		
+		if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
+		end
+	end,
+	SSCommand=function(self)
+		ScreenshotQR("P1")
 	end
 }
 
@@ -545,14 +614,39 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_2))
 	end,
 	SubmitCommand=function(self)
-		self:settext("Submitted!")
+		self:settext(THEME:GetString("GrooveStats", "Submitted"))
 	end,
 	SubmitFailedCommand=function(self)
-		self:settext("Submit Failed 😞")
+		self:settext(THEME:GetString("GrooveStats", "SubmitFailed"))
 		DiffuseEmojis(self)
+		
+		if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+			local p1pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+				p1pane:GetChild("Pane" .. SL["P1"].EvalPanePrimary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p1pane:GetChild("Pane" .. SL["P1"].EvalPaneSecondary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p1pane:GetChild("Pane7_SideP1"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
+		end
 	end,
 	TimedOutCommand=function(self)
-		self:settext("Timed Out")
+		self:settext(THEME:GetString("GrooveStats", "TimedOut"))
+		
+		if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
+		end
+	end,
+	SSCommand=function(self)
+		ScreenshotQR("P2")
 	end
 }
 

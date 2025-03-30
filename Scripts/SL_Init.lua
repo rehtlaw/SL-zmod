@@ -13,6 +13,7 @@ local PlayerDefaults = {
 				NoteSkin = nil,
 				Mini = "0%",
 				BackgroundFilter = 50,
+				Spacing = "0%",
 				VisualDelay = "0ms",
 
 				HideTargets = false,
@@ -38,6 +39,7 @@ local PlayerDefaults = {
 				LifeMeterType = "Standard",
 				NPSGraphAtTop = false,
 				JudgmentTilt = false,
+				TiltMultiplier = 1,
 				ColumnCues = true,
 				ColumnCountdown = true,
 				ShowHeldMiss = false,
@@ -51,7 +53,6 @@ local PlayerDefaults = {
 				HideEarlyDecentWayOffJudgments = true,
 				HideEarlyDecentWayOffFlash = false,
 
-				TimingWindows = { true, true, true, true, true },
 				ShowFaPlusWindow = false,
 				ShowEXScore = true,
 				ShowFaPlusPane = true,
@@ -62,7 +63,7 @@ local PlayerDefaults = {
 				PackBanner = true,
 				StepInfo = true,
 				SBITGScore = true,
-				SBEXScore = true,
+				SBExScore = true,
 				SBEvents = true,
 
 				FlashMiss = true,
@@ -72,7 +73,6 @@ local PlayerDefaults = {
 				FlashExcellent = false,
 				FlashFantastic = false,
 
-				TiltMultiplier = 1,
 				ComboColors = "Glow",
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
@@ -127,8 +127,9 @@ local PlayerDefaults = {
 			self.EvalPanePrimary = 1 -- large score and judgment counts
 			self.EvalPaneSecondary = 5 -- offset histogram
 
-			-- The Groovestats API key loaded for this player
+			-- The GrooveStats API key loaded for this player
 			self.ApiKey = ""
+			self.GrooveStatsUsername = ""
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
 			self.Favorites = {}
@@ -530,6 +531,7 @@ function InitializeSimplyLove()
 	SL.P1:initialize()
 	SL.P2:initialize()
 	SL.Global:initialize()
+
 end
 
 InitializeSimplyLove()
