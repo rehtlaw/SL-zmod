@@ -315,30 +315,25 @@ local PaneItems = {
 -- -----------------------------------------------------------------------
 local af = Def.ActorFrame({ Name = "PaneDisplayMaster" })
 
-af[#af + 1] = RequestResponseActor(17, 50)
-	.. {
-		Name = "GetScoresRequester",
-		OnCommand = function(self)
-			-- Create variables for both players, even if they're not currently active.
-			self.IsParsing = { false, false }
-		end,
-		-- Broadcasted from ./PerPlayer/DensityGraph.lua
-		P1ChartParsingMessageCommand = function(self)
-			self.IsParsing[1] = true
-		end,
-		P2ChartParsingMessageCommand = function(self)
-			self.IsParsing[2] = true
-		end,
-		P1ChartParsedMessageCommand = function(self)
-			self.IsParsing[1] = false
-			self:queuecommand("ChartParsed")
-		end,
-		P2ChartParsedMessageCommand = function(self)
-			self.IsParsing[2] = false
-			self:queuecommand("ChartParsed")
-		end,
-		ChartParsedCommand = function(self)
-			local master = self:GetParent()
+af[#af+1] = RequestResponseActor(17, 50)..{
+	Name="GetScoresRequester",
+	OnCommand=function(self)
+		-- Create variables for both players, even if they're not currently active.
+		self.IsParsing = {false, false}
+	end,
+	-- Broadcasted from ./PerPlayer/DensityGraph.lua
+	P1ChartParsingMessageCommand=function(self)	self.IsParsing[1] = true end,
+	P2ChartParsingMessageCommand=function(self)	self.IsParsing[2] = true end,
+	P1ChartParsedMessageCommand=function(self)
+		self.IsParsing[1] = false
+		self:queuecommand("ChartParsed")
+	end,
+	P2ChartParsedMessageCommand=function(self)
+		self.IsParsing[2] = false
+		self:queuecommand("ChartParsed")
+	end,
+	ChartParsedCommand=function(self)
+		local master = self:GetParent()
 
 		if not IsServiceAllowed(SL.GrooveStats.GetScores) then
 			if SL.GrooveStats.IsConnected then
@@ -350,6 +345,8 @@ af[#af + 1] = RequestResponseActor(17, 50)
 					loadingText:visible(true)
 				end
 			end
+			return
+		end
 
 		-- Make sure we're still not parsing either chart.
 		if self.IsParsing[1] or self.IsParsing[2] then return end

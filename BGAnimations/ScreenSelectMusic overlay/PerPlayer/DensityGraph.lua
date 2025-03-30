@@ -181,7 +181,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			self:y(-50)
 			if player == PLAYER_1 then
 				self:x(60)
-			else					
+			else
 				self:x(-136)
 			end
 		else
@@ -192,10 +192,11 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			else
 				self:x(-55)
 			end
-			self:settext("Peak NPS: ")		
+			self:settext("Peak NPS: ")
 		end
 		-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
-		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
+		-- no actually it should always be black - rehtlaw
+		self:diffuse({0, 0, 0, 1})
 	end,
 	HideCommand=function(self)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
@@ -226,7 +227,8 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			end
 			-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
 			self:diffuse({ 0, 0, 0, 1 })
-		end,
+		end
+	end,
 		HideCommand = function(self)
 			if #GAMESTATE:GetHumanPlayers() == 1 then
 				self:settext("Peak NPS: \nPeak eBPM: ")
@@ -440,6 +442,7 @@ for i, row in ipairs(layout) do
 					self:xy(-width / 2 + 40, -height / 2 + 10)
 					self:addx((j - 1) * colSpacing)
 					self:addy((i - 1) * rowSpacing)
+				end
 				end,
 				HideCommand = function(self)
 					if col ~= "Total Stream" then
