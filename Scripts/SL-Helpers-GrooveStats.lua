@@ -812,6 +812,9 @@ DownloadEventUnlock = function(url, unlockName, packName)
 							SL.GrooveStats.UnlocksCache[url] = {}
 						end
 						SL.GrooveStats.UnlocksCache[url][packName] = true
+						
+						SL.NewDownloadsCompleted = true
+						MESSAGEMAN:Broadcast("NewDownloadsCompleted")
 
 						-- If Pack.ini doesn't exist (new unlock for this player), create it.
 						local group = string.lower(packName)

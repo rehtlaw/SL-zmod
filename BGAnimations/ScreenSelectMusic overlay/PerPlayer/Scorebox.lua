@@ -85,6 +85,7 @@ local HasData = function(idx)
 end
 
 local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, isRival, isFail, isEx)
+	if score_idx > 5 then return end
 	all_data[data_idx].has_data = true
 
 	local score_data = all_data[data_idx]["scores"][score_idx]
@@ -208,20 +209,22 @@ local LeaderboardRequestProcessor = function(res, master)
 			-- If the player is using EX scoring, then we want to display the EX leaderboard first.		
 			if showEX then
 				if data[playerStr]["exLeaderboard"] then
+					local added = {}
 					numEntries = 0
 					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
-						numEntries = numEntries + 1
-						SetScoreData(
-							1,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							true
-						)
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							numEntries = numEntries + 1
+							SetScoreData(1, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											true
+										)
+						end
 					end
 					numEntries = numEntries + 1
 					for i = math.max(2, numEntries), 5, 1 do
@@ -233,19 +236,21 @@ local LeaderboardRequestProcessor = function(res, master)
 			if showITG then
 				if data[playerStr]["gsLeaderboard"] then
 					numEntries = 0
+					local added = {}
 					for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
-						numEntries = numEntries + 1
-						SetScoreData(
-							2,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							boogie_ex
-						)
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							numEntries = numEntries + 1
+							SetScoreData(2, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											boogie_ex
+										)
+						end
 					end
 					numEntries = numEntries + 1
 					for i = math.max(2, numEntries), 5, 1 do
@@ -258,19 +263,21 @@ local LeaderboardRequestProcessor = function(res, master)
 			if showITG then
 				if data[playerStr]["gsLeaderboard"] then
 					numEntries = 0
+					local added = {}
 					for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
-						numEntries = numEntries + 1
-						SetScoreData(
-							1,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							boogie_ex
-						)
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							numEntries = numEntries + 1
+							SetScoreData(1, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											boogie_ex
+										)
+						end
 					end
 					numEntries = numEntries + 1
 					for i = math.max(2, numEntries), 5, 1 do
@@ -282,19 +289,21 @@ local LeaderboardRequestProcessor = function(res, master)
 			if showEX then
 				if data[playerStr]["exLeaderboard"] then
 					numEntries = 0
+					local added = {}
 					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
-						numEntries = numEntries + 1
-						SetScoreData(
-							2,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							true
-						)
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							numEntries = numEntries + 1
+							SetScoreData(2, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											true
+										)
+						end
 					end
 					numEntries = numEntries + 1
 					for i = math.max(2, numEntries), 5, 1 do
@@ -309,22 +318,24 @@ local LeaderboardRequestProcessor = function(res, master)
 			if data[playerStr]["rpg"] then
 				cur_style = 3
 				local numEntries = 0
+				local added = {}
 				SetScoreData(3, 1, "", "No Scores", "", false, false, false)
 
 				if data[playerStr]["rpg"]["rpgLeaderboard"] then
 					for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
-						numEntries = numEntries + 1
-						SetScoreData(
-							3,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							false
-						)
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							numEntries = numEntries + 1
+							SetScoreData(3, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											false
+										)
+						end
 					end
 					numEntries = numEntries + 1
 					for i = numEntries, 5, 1 do
@@ -336,26 +347,28 @@ local LeaderboardRequestProcessor = function(res, master)
 			if data[playerStr]["itl"] then
 				cur_style = 4
 				local numEntries = 0
+				local added = {}
 				SetScoreData(4, 1, "", "No Scores", "", false, false, false)
 
 				if data[playerStr]["itl"]["itlLeaderboard"] then
 					for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-						if entry["isSelf"] then
-							UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
-							SL["P"..n].itlScore = entry["score"]
+						if not added[entry["name"]] then
+							added[entry["name"]] = true
+							if entry["isSelf"] then
+								UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
+								SL["P"..n].itlScore = entry["score"]
+							end
+							numEntries = numEntries + 1
+							SetScoreData(4, numEntries,
+											tostring(entry["rank"]),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											true
+										)
 						end
-						numEntries = numEntries + 1
-						SetScoreData(
-							4,
-							numEntries,
-							tostring(entry["rank"]),
-							entry["name"],
-							string.format("%.2f", entry["score"] / 100),
-							entry["isSelf"],
-							entry["isRival"],
-							entry["isFail"],
-							true
-						)
 					end
 					numEntries = numEntries + 1
 					for i = numEntries, 5, 1 do

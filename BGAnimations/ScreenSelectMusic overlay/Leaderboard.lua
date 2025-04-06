@@ -51,46 +51,50 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 		end
 
 		if leaderboardData["Data"] then
+			local added = {}
 			for gsEntry in ivalues(leaderboardData["Data"]) do
-				local entry = leaderboard:GetChild("LeaderboardEntry"..entryNum)
-				SetEntryText(
-					gsEntry["rank"]..".",
-					gsEntry["name"],
-					string.format("%.2f%%", gsEntry["score"]/100),
-					ParseGrooveStatsDate(gsEntry["date"]),
-					entry
-				)
-				if gsEntry["isRival"] then
-					if gsEntry["isFail"] then
-						entry:GetChild("Rank"):diffuse(Color.Black)
-						entry:GetChild("Name"):diffuse(Color.Black)
-						entry:GetChild("Score"):diffuse(Color.Red)
-						entry:GetChild("Date"):diffuse(Color.Black)
+				if not added[gsEntry["name"]] then
+					added[gsEntry["name"]] = true
+					local entry = leaderboard:GetChild("LeaderboardEntry"..entryNum)
+					SetEntryText(
+						gsEntry["rank"]..".",
+						gsEntry["name"],
+						string.format("%.2f%%", gsEntry["score"]/100),
+						ParseGrooveStatsDate(gsEntry["date"]),
+						entry
+					)
+					if gsEntry["isRival"] then
+						if gsEntry["isFail"] then
+							entry:GetChild("Rank"):diffuse(Color.Black)
+							entry:GetChild("Name"):diffuse(Color.Black)
+							entry:GetChild("Score"):diffuse(Color.Red)
+							entry:GetChild("Date"):diffuse(Color.Black)
+						else
+							entry:diffuse(Color.Black)
+						end
+						leaderboard:GetChild("Rival"..rivalNum):y(entry:GetY()):visible(true)
+						rivalNum = rivalNum + 1
+					elseif gsEntry["isSelf"] then
+						if gsEntry["isFail"] then
+							entry:GetChild("Rank"):diffuse(Color.Black)
+							entry:GetChild("Name"):diffuse(Color.Black)
+							entry:GetChild("Score"):diffuse(Color.Red)
+							entry:GetChild("Date"):diffuse(Color.Black)
+						else
+							entry:diffuse(Color.Black)
+						end
+						leaderboard:GetChild("Self"):y(entry:GetY()):visible(true)
 					else
-						entry:diffuse(Color.Black)
+						entry:diffuse(Color.White)
 					end
-					leaderboard:GetChild("Rival"..rivalNum):y(entry:GetY()):visible(true)
-					rivalNum = rivalNum + 1
-				elseif gsEntry["isSelf"] then
-					if gsEntry["isFail"] then
-						entry:GetChild("Rank"):diffuse(Color.Black)
-						entry:GetChild("Name"):diffuse(Color.Black)
-						entry:GetChild("Score"):diffuse(Color.Red)
-						entry:GetChild("Date"):diffuse(Color.Black)
-					else
-						entry:diffuse(Color.Black)
-					end
-					leaderboard:GetChild("Self"):y(entry:GetY()):visible(true)
-				else
-					entry:diffuse(Color.White)
-				end
 
-				-- Why does this work for normal entries but not for Rivals/Self where
-				-- I have to explicitly set the colors for each child??
-				if gsEntry["isFail"] then
-					entry:GetChild("Score"):diffuse(Color.Red)
+					-- Why does this work for normal entries but not for Rivals/Self where
+					-- I have to explicitly set the colors for each child??
+					if gsEntry["isFail"] then
+						entry:GetChild("Score"):diffuse(Color.Red)
+					end
+					entryNum = entryNum + 1
 				end
-				entryNum = entryNum + 1
 			end
 		end
 	end

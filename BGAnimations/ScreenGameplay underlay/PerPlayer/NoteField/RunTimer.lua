@@ -46,7 +46,7 @@ local IsEndOfStream = function(currMeasure, Measures, streamIndex)
 	local segmentEnd   = Measures[streamIndex].streamEnd
 
 	local currStreamLength = segmentEnd - segmentStart
-	local currCount = math.floor(currMeasure - segmentStart) + 1
+	local currCount = math.ceil(currMeasure - segmentStart)
 
 	return currCount > currStreamLength
 end
@@ -64,7 +64,7 @@ local GetTimeRemaining = function(currBeat, Measures, streamIndex)
 	if mods.TimerMode == "Time" then
 		local currTime = currBeat / (PlayerState:GetSongPosition():GetCurBPS() * MusicRate)
 
-		local currStreamLength = math.floor((segmentEnd - segmentStart) * measureSeconds + 1)
+		local currStreamLength = math.ceil((segmentEnd - segmentStart) * measureSeconds)
 		local showTotal = "0." .. currStreamLength
 		if currStreamLength < 10 then
 			showTotal = "0.0" .. currStreamLength
@@ -76,7 +76,7 @@ local GetTimeRemaining = function(currBeat, Measures, streamIndex)
 			end
 			showTotal = minutes .. "." .. seconds
 		end
-		local currRemaining = math.max(math.floor(segmentEnd * measureSeconds - currTime + 1), 0)
+		local currRemaining = math.max(math.ceil(segmentEnd * measureSeconds - currTime), 0)
 		local showRemaining = "0." .. currRemaining
 		if currRemaining < 10 then
 			showRemaining = "0.0" .. currRemaining
@@ -91,71 +91,23 @@ local GetTimeRemaining = function(currBeat, Measures, streamIndex)
 
 		if currRemaining > currStreamLength then
 			return showTotal
+		elseif currRemaining < 1 then
+			return "0.00 "
 		end
 		
 		return (showRemaining) .. " "
 	elseif mods.TimerMode == "Measures" then
-		local currStreamLength = math.floor(segmentEnd - segmentStart + 1)
-		local currRemaining = math.max(math.floor(segmentEnd - currBeat / 4 + 1), 0)
+		local currStreamLength = math.ceil(segmentEnd - segmentStart)
+		local currRemaining = math.max(math.ceil(segmentEnd - currBeat / 4), 0)
 		
 		if currRemaining > currStreamLength then
 			return currStreamLength
+		elseif currRemaining < 1 then
+			return 0 .. " "
 		end
 		return currRemaining .. " "
 	end
 	
-end
-
-local GetTextForMeasure = function(currMeasure, Measures, streamIndex, isLookAhead)
-	if currMeasure < 0 then
-		if not isLookAhead then
-			-- Measures[1] is guaranteed to exist as we check for non-empty tables at the start of Update() below.
-			if not Measures[1].isBreak then
-				-- currMeasure can be negative. If the first thing is a stream, then denote that "negative space" as a rest.
-				return "(" .. math.floor(currMeasure * -1) + 1 .. ")"
-			else
-				-- If the first thing is a break, then add the negative space to the existing break count
-				local segmentStart = Measures[1].streamStart
-				local segmentEnd   = Measures[1].streamEnd
-				local currStreamLength = segmentEnd - segmentStart
-				return "(" .. math.floor(currMeasure * -1) + 1 + currStreamLength .. ")"
-			end
-		else
-			if not Measures[1].isBreak then
-				-- Push all the stream segments back by one since we're adding an additional ephemeral break.
-				streamIndex = streamIndex - 1
-			end
-		end
-	end
-	if Measures[streamIndex] == nil then return "" end
-
-	-- A "segment" can be either stream or rest
-	local segmentStart = Measures[streamIndex].streamStart
-	local segmentEnd   = Measures[streamIndex].streamEnd
-
-	local currStreamLength = segmentEnd - segmentStart
-	local currCount = math.floor(currMeasure - segmentStart) + 1
-
-	local text = ""
-	if Measures[streamIndex].isBreak then
-		if mods.MeasureCounterLookahead > 0 then
-			if not isLookAhead then
-				local remainingRest = currStreamLength - currCount + 1
-
-				-- Ensure that the rest count is in range of the total length.
-				text = "(" .. remainingRest .. ")"
-			else
-				text = "(" .. currStreamLength .. ")"
-			end
-		end
-	else
-		if not isLookAhead and currCount ~= 0 then
-			text = tostring(currCount .. "/" .. currStreamLength)
-		else
-			text = tostring(currStreamLength)
-		end
-	end
-	return text
 end
 
 local Update = function(self, delta)
