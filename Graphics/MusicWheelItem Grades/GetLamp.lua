@@ -108,6 +108,10 @@ return Def.ActorFrame{
 					else
 						self:GetParent():GetChild("Judge"):playcommand("Hide")
 					end
+				else
+					self:diffuseshift():effectperiod(0.8)
+					self:effectcolor1(lamp_color)
+					self:effectcolor2(lerp_color(0.70, color("#ffffff"), lamp_color))
 				end				
 			end
 
