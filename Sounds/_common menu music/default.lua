@@ -1,6 +1,6 @@
 local songs = {
-	Hearts = "intro",
-	Arrows = "intro",
+	Hearts = "Whispers Under Ground",
+	Arrows = "Whispers Under Ground",
 	Bears  = "crystalis",
 	Ducks  = "Xuxa fami VRC6",
 	Cats   = "Beanmania IIDX",
@@ -8,7 +8,7 @@ local songs = {
 	Gay    = "Mystical Wheelbarrow Journey",
 	Stars  = "Shooting Star - faux VRC6 remix",
 	Thonk  = "Da Box of Kardboard Too (feat Naoki vs ZigZag) - TaroNuke Remix",
-	Technique = "intro",
+	Technique = "Whispers Under Ground",
 	SRPG8  = "SRPG8"
 }
 
