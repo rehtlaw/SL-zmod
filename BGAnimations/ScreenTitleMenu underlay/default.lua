@@ -24,6 +24,31 @@ if IsSpooky() then
 	af[#af+1] = LoadActor("./Spooky.lua")
 end
 
+local InputHandler = function( event )
+
+	-- if (somehow) there's no event, bail
+	if not event then return end
+
+	if event.type == "InputEventType_FirstPress" then
+
+		Trace(event.DeviceInput.button)
+
+		if event.DeviceInput.button == "DeviceButton_1" then
+			SCREENMAN:SetNewScreen("ScreenTestReflex")
+		elseif event.DeviceInput.button == "DeviceButton_2" then
+			SCREENMAN:SetNewScreen("ScreenTestReflex2")
+		end
+
+	end
+
+end
+
+af[#af+1] = Def.Actor {
+	OnCommand=function()
+		local screen = SCREENMAN:GetTopScreen()
+		screen:AddInputCallback( InputHandler )
+	end
+}
 -- -----------------------------------------------------------------------
 -- af2 contains things that should fade out during the OffCommand
 local af2 = Def.ActorFrame{}
