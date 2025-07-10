@@ -13,7 +13,7 @@ local TapNoteScores = {}
 local TapNoteScores = {
 	Types = { 'W0', 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' },
 	Names = {
-		THEME:GetString("TapNoteScore", "W1"),
+		THEME:GetString("TapNoteScoreFA+", "W1"),
 		THEME:GetString("TapNoteScoreFA+", "W2"), -- Extract the Fantastic White window
         THEME:GetString("TapNoteScore", "W2"),
 		THEME:GetString("TapNoteScore", "W3"),
@@ -22,7 +22,7 @@ local TapNoteScores = {
 		THEME:GetString("TapNoteScore", "Miss"),
 	},
 	Colors = {
-		SL.JudgmentColors["ITG"][1], -- Fantastic Blue
+		SL.JudgmentColors["FA+"][1], -- Fantastic Blue
 		SL.JudgmentColors["FA+"][2], -- Just extract the Fantastic white color
         SL.JudgmentColors["ITG"][2], -- Yellow Excellent
 		SL.JudgmentColors["ITG"][3], -- Green Great

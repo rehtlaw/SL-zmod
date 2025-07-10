@@ -6,7 +6,7 @@ local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local TapNoteScores = {
 	Types = { 'W0', 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' },
 	Colors = {
-		SL.JudgmentColors["ITG"][1], -- Fantastic Blue
+		SL.JudgmentColors["FA+"][1], -- Fantastic Blue
 		SL.JudgmentColors["FA+"][2], -- Just extract the Fantastic white color
         SL.JudgmentColors["ITG"][2], -- Yellow Excellent
 		SL.JudgmentColors["ITG"][3], -- Green Great
