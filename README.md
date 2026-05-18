@@ -1,4 +1,7 @@
 # IF YOU'RE LOOKING FOR THE ACTUAL ZMOD: [GO HERE](https://github.com/zarzob/Simply-Love-SM5). This is just my personal version of zmod, which has a handful of customizations
+
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 ```
 git remote add upstream https://github.com/zarzob/Simply-Love-SM5
 git pull upstream itgmania-release --no-rebase
